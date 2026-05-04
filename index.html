@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhysioPS — HumanOS ANS Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,800,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;--space-20:5rem;--space-24:6rem;
+  --radius-sm:0.25rem;--radius-md:0.5rem;--radius-lg:0.75rem;
+  --radius-xl:1rem;--radius-2xl:1.5rem;--radius-full:9999px;
+  --transition:200ms cubic-bezier(0.16,1,0.3,1);
+  --font-display:'Satoshi','DM Sans',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --color-bg:#080c10;--color-surface:#0d1219;--color-surface-2:#111822;
+  --color-surface-3:#16202e;
+  --color-border:rgba(80,200,220,0.10);--color-border-hi:rgba(80,200,220,0.22);
+  --color-divider:rgba(255,255,255,0.06);
+  --color-text:#dce8f0;--color-text-muted:#7a9ab0;
+  --color-text-faint:#3d5a70;--color-text-inverse:#0a1018;
+  --color-primary:#1dd6e0;--color-primary-dim:#0e8f97;
+  --color-primary-glow:rgba(29,214,224,0.18);--color-primary-bg:rgba(29,214,224,0.06);
+  --color-amber:#f5a623;--color-amber-dim:#b87415;
+  --color-amber-glow:rgba(245,166,35,0.15);--color-amber-bg:rgba(245,166,35,0.06);
+  --color-violet:#a78bfa;--color-violet-dim:#6d46e8;
+  --color-violet-glow:rgba(167,139,250,0.12);--color-violet-bg:rgba(167,139,250,0.05);
+  --color-green:#34d399;--color-green-dim:#0f8c5a;
+  --color-green-glow:rgba(52,211,153,0.12);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.5),0 0 0 1px rgba(80,200,220,0.06);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.6),0 0 32px rgba(29,214,224,0.06);
+  --content-default:1200px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.6;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--color-surface)}
+::-webkit-scrollbar-thumb{background:var(--color-primary-dim);border-radius:3px}
+.container{max-width:var(--content-default);margin-inline:auto;padding-inline:var(--space-6)}
+
+/* ── PHYSIO SECTION ─────────────────────────────────── */
+.physio-section{position:relative;overflow:hidden;padding-block:var(--space-20) var(--space-16);background:var(--color-bg)}
+.physio-section::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(29,214,224,0.07) 0%,transparent 55%),
+    radial-gradient(circle at 80% 70%,rgba(167,139,250,0.06) 0%,transparent 50%),
+    radial-gradient(circle at 50% 50%,rgba(245,166,35,0.03) 0%,transparent 70%),
+    linear-gradient(rgba(29,214,224,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(29,214,224,0.03) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,100% 100%,48px 48px,48px 48px;
+  pointer-events:none;animation:gridPulse 8s ease-in-out infinite alternate}
+@keyframes gridPulse{0%{opacity:.7}100%{opacity:1}}
+
+.hero-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12);align-items:center;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-bg);border:1px solid var(--color-border-hi);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);margin-bottom:var(--space-5)}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary);animation:pulseDot 1.8s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+.hero-title{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:900;line-height:1.05;letter-spacing:-.03em;color:#eef4fa;margin-bottom:var(--space-4)}
+.accent-teal{color:var(--color-primary)}
+.accent-amber{color:var(--color-amber)}
+.hero-subtitle{font-size:var(--text-base);color:var(--color-text-muted);line-height:1.7;max-width:52ch;margin-bottom:var(--space-8)}
+.status-strip{display:flex;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-8)}
+.status-chip{display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);transition:border-color var(--transition),color var(--transition)}
+.status-chip:hover{border-color:var(--color-border-hi);color:var(--color-text)}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-green{background:var(--color-green);box-shadow:0 0 6px var(--color-green);animation:pulseDot 2s ease-in-out infinite}
+.dot-amber{background:var(--color-amber);box-shadow:0 0 6px var(--color-amber);animation:pulseDot 2.4s ease-in-out infinite}
+.dot-violet{background:var(--color-violet);box-shadow:0 0 6px var(--color-violet);animation:pulseDot 2.8s ease-in-out infinite}
+.dot-teal{background:var(--color-primary);box-shadow:0 0 6px var(--color-primary);animation:pulseDot 1.6s ease-in-out infinite}
+.hero-cta-group{display:flex;gap:var(--space-3);flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary);color:var(--color-text-inverse);font-family:var(--font-body);font-size:var(--text-sm);font-weight:700;padding:var(--space-3) var(--space-6);border-radius:var(--radius-lg);text-decoration:none;transition:background var(--transition),box-shadow var(--transition),transform var(--transition);box-shadow:0 0 20px rgba(29,214,224,.25)}
+.btn-primary:hover{background:#2ee8f3;box-shadow:0 0 32px rgba(29,214,224,.4);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{display:inline-flex;align-items:center;gap:var(--space-2);background:transparent;color:var(--color-text-muted);font-size:var(--text-sm);font-weight:500;padding:var(--space-3) var(--space-5);border:1px solid var(--color-border);border-radius:var(--radius-lg);text-decoration:none;transition:border-color var(--transition),color var(--transition),background var(--transition)}
+.btn-ghost:hover{border-color:var(--color-border-hi);color:var(--color-text);background:var(--color-surface)}
+.hero-visual{position:relative}
+.hero-img-wrap{position:relative;border-radius:var(--radius-2xl);overflow:hidden;border:1px solid var(--color-border);box-shadow:var(--shadow-lg),0 0 60px rgba(29,214,224,.08)}
+.hero-img-wrap img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.hero-badge{position:absolute;bottom:var(--space-4);left:var(--space-4);display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-primary);background:rgba(8,12,16,.85);border:1px solid var(--color-border-hi);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.hero-badge-live{position:absolute;top:var(--space-3);right:var(--space-3);display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:#0a1018;background:var(--color-primary);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);font-weight:600}
+
+/* ── METRICS BAR ─────────────────────────────────────── */
+.metrics-bar{border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider);background:var(--color-surface);padding-block:var(--space-5);position:relative;overflow:hidden}
+.metrics-bar::before{content:'';position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--color-primary),transparent);animation:scanLine 4s ease-in-out infinite}
+@keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-4);align-items:center}
+.metric-item{text-align:center;padding:var(--space-2) var(--space-3);border-right:1px solid var(--color-divider)}
+.metric-item:last-child{border-right:none}
+.metric-value{font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;line-height:1;margin-bottom:var(--space-1);letter-spacing:-.03em}
+.metric-label{font-size:var(--text-xs);color:var(--color-text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono)}
+.metric-teal{color:var(--color-primary)}
+.metric-amber{color:var(--color-amber)}
+.metric-green{color:var(--color-green)}
+.metric-violet{color:var(--color-violet)}
+.metric-white{color:#eef4fa}
+
+/* ── FEATURES SECTION ────────────────────────────────── */
+.features-section{padding-block:var(--space-20);position:relative;overflow:hidden}
+.features-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 90% 10%,rgba(167,139,250,.05) 0%,transparent 50%),radial-gradient(circle at 10% 90%,rgba(29,214,224,.04) 0%,transparent 50%);pointer-events:none}
+.section-header{margin-bottom:var(--space-12);display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--space-8)}
+.section-kicker{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-primary);margin-bottom:var(--space-3);display:flex;align-items:center;gap:var(--space-2)}
+.section-kicker::before{content:'';display:inline-block;width:24px;height:1px;background:var(--color-primary)}
+.section-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;line-height:1.1;letter-spacing:-.025em;color:#eef4fa}
+.section-desc{font-size:var(--text-sm);color:var(--color-text-muted);max-width:42ch;line-height:1.7;text-align:right}
+
+.bento-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-4)}
+.bento-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);position:relative;overflow:hidden;transition:border-color var(--transition),box-shadow var(--transition),transform var(--transition)}
+.bento-card:hover{border-color:var(--color-border-hi);box-shadow:var(--shadow-md),0 0 24px rgba(29,214,224,.06);transform:translateY(-2px)}
+.bento-card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(29,214,224,.04),transparent 60%);opacity:0;transition:opacity var(--transition);pointer-events:none}
+.bento-card:hover::before{opacity:1}
+.span-5{grid-column:span 5}.span-7{grid-column:span 7}.span-4{grid-column:span 4}
+.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-3{grid-column:span 3}
+
+.card-icon{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-4);font-size:20px;flex-shrink:0}
+.icon-teal{background:var(--color-primary-bg);border:1px solid rgba(29,214,224,.15);color:var(--color-primary)}
+.icon-amber{background:var(--color-amber-bg);border:1px solid rgba(245,166,35,.15);color:var(--color-amber)}
+.icon-violet{background:var(--color-violet-bg);border:1px solid rgba(167,139,250,.15);color:var(--color-violet)}
+.icon-green{background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);color:var(--color-green)}
+.card-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:#eef4fa;margin-bottom:var(--space-2);line-height:1.2}
+.card-body{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;max-width:48ch}
+
+.card-featured{padding:0;display:flex;flex-direction:column}
+.card-featured .card-img{width:100%;height:200px;object-fit:cover;border-radius:calc(var(--radius-xl) - 1px) calc(var(--radius-xl) - 1px) 0 0}
+.card-featured .card-content{padding:var(--space-5) var(--space-6);flex:1}
+.hrv-card{background:var(--color-surface-2)}
+.hrv-score{font-family:var(--font-mono);font-size:var(--text-2xl);font-weight:700;color:var(--color-primary);line-height:1;letter-spacing:-.04em}
+.hrv-unit{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono);margin-left:var(--space-1)}
+.hrv-status{display:inline-flex;align-items:center;gap:var(--space-1);font-size:var(--text-xs);color:var(--color-green);background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);border-radius:var(--radius-full);padding:var(--space-1) var(--space-2);font-family:var(--font-mono)}
+
+.waveform-svg{width:100%;height:60px;margin-top:var(--space-3);overflow:visible}
+.waveform-line{fill:none;stroke:var(--color-primary);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000;animation:drawLine 2.5s ease-out .3s forwards}
+.waveform-fill{fill:url(#waveGrad);opacity:0;animation:fadeIn 1s ease-out 2.2s forwards}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+@keyframes fadeIn{to{opacity:1}}
+
+.balance-row{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-3)}
+.balance-label{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);width:30px;flex-shrink:0}
+.balance-track{flex:1;height:6px;background:var(--color-surface-3);border-radius:var(--radius-full);overflow:hidden}
+.balance-fill{height:100%;border-radius:var(--radius-full);transition:width 1.5s cubic-bezier(.16,1,.3,1)}
+.fill-symp{background:linear-gradient(90deg,var(--color-amber),var(--color-amber-dim))}
+.fill-para{background:linear-gradient(90deg,var(--color-primary-dim),var(--color-primary))}
+.edge-card-img{width:100%;height:140px;object-fit:cover;border-radius:var(--radius-lg);margin-bottom:var(--space-4);border:1px solid var(--color-border)}
+.node-list{list-style:none;display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-4)}
+.node-item{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted);padding:var(--space-2) var(--space-3);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md)}
+.node-region{color:var(--color-text)}
+.node-latency{color:var(--color-green)}
+.node-status-badge{font-size:10px;padding:2px 7px;border-radius:var(--radius-full);background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);color:var(--color-green)}
+.ai-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-top:var(--space-5)}
+.ai-metric-box{padding:var(--space-3) var(--space-4);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg)}
+.ai-metric-num{font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;line-height:1;margin-bottom:var(--space-1)}
+.ai-metric-desc{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono)}
+.protocol-pills{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)}
+.pill{font-family:var(--font-mono);font-size:var(--text-xs);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);border:1px solid}
+.pill-teal{color:var(--color-primary);border-color:rgba(29,214,224,.2);background:var(--color-primary-bg)}
+.pill-amber{color:var(--color-amber);border-color:rgba(245,166,35,.2);background:var(--color-amber-bg)}
+.pill-violet{color:var(--color-violet);border-color:rgba(167,139,250,.2);background:var(--color-violet-bg)}
+.pill-muted{color:var(--color-text-muted);border-color:var(--color-border);background:var(--color-surface-2)}
+
+/* ── INFRA STRIP ─────────────────────────────────────── */
+.infra-strip{padding-block:var(--space-12);border-top:1px solid var(--color-divider);background:var(--color-surface);position:relative;overflow:hidden}
+.infra-strip::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(29,214,224,.04) 0%,transparent 30%,transparent 70%,rgba(167,139,250,.04) 100%);pointer-events:none}
+.infra-layout{display:grid;grid-template-columns:1fr auto;align-items:center;gap:var(--space-10);position:relative;z-index:1}
+.infra-kicker{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-violet);margin-bottom:var(--space-2)}
+.infra-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;letter-spacing:-.025em;color:#eef4fa;margin-bottom:var(--space-3)}
+.infra-desc{font-size:var(--text-sm);color:var(--color-text-muted);max-width:54ch;line-height:1.7}
+.infra-right{display:grid;grid-template-columns:repeat(3,140px);gap:var(--space-3)}
+.infra-box{padding:var(--space-4);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-xl);text-align:center;transition:border-color var(--transition),box-shadow var(--transition)}
+.infra-box:hover{border-color:var(--color-border-hi);box-shadow:0 0 20px rgba(29,214,224,.08)}
+.infra-box-icon{font-size:28px;margin-bottom:var(--space-2);display:block}
+.infra-box-name{font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:var(--color-text);margin-bottom:var(--space-1)}
+.infra-box-detail{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono);line-height:1.5}
+
+/* ── PROTOCOLS ──────────────────────────────────────── */
+.protocols-section{padding-block:var(--space-20);position:relative}
+.protocols-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(29,214,224,.04) 0%,transparent 60%);pointer-events:none}
+.protocols-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);position:relative;z-index:1}
+.protocol-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);transition:border-color var(--transition),transform var(--transition);position:relative;overflow:hidden}
+.protocol-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity var(--transition)}
+.proto-teal::after{background:var(--color-primary)}
+.proto-amber::after{background:var(--color-amber)}
+.proto-violet::after{background:var(--color-violet)}
+.protocol-card:hover::after{opacity:1}
+.protocol-card:hover{border-color:var(--color-border-hi);transform:translateY(-3px)}
+.proto-num{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);margin-bottom:var(--space-4);letter-spacing:.1em}
+.proto-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:#eef4fa;margin-bottom:var(--space-3);line-height:1.2}
+.proto-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;margin-bottom:var(--space-5)}
+.proto-tags{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+
+/* ── CTA BANNER ──────────────────────────────────────── */
+.cta-banner{position:relative;overflow:hidden;border-radius:var(--radius-2xl);background:var(--color-surface-2);border:1px solid var(--color-border-hi);padding:var(--space-12)}
+.cta-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(29,214,224,.1) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(167,139,250,.08) 0%,transparent 60%);pointer-events:none}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);position:relative;z-index:1}
+.cta-label{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-primary);margin-bottom:var(--space-3)}
+.cta-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;letter-spacing:-.025em;color:#eef4fa;margin-bottom:var(--space-3);line-height:1.1}
+.cta-sub{font-size:var(--text-sm);color:var(--color-text-muted);max-width:50ch;line-height:1.6}
+.cta-actions{display:flex;flex-direction:column;gap:var(--space-3);flex-shrink:0}
+
+.fade-in{opacity:1}
+@supports(animation-timeline:scroll()){
+  .fade-in{opacity:0;animation:revealFade linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
+  @keyframes revealFade{to{opacity:1}}
+}
+
+@media(max-width:1024px){
+  .hero-layout{grid-template-columns:1fr;gap:var(--space-8)}
+  .hero-subtitle{max-width:none}
+  .metrics-row{grid-template-columns:repeat(3,1fr)}
+  .bento-grid{grid-template-columns:1fr 1fr}
+  .span-5,.span-7,.span-4,.span-8,.span-6{grid-column:span 2}
+  .span-3{grid-column:span 1}
+  .infra-layout{grid-template-columns:1fr}
+  .infra-right{grid-template-columns:repeat(3,1fr)}
+  .protocols-grid{grid-template-columns:1fr 1fr}
+  .section-header{grid-template-columns:1fr}
+  .section-desc{text-align:left}
+}
+@media(max-width:640px){
+  .bento-grid{grid-template-columns:1fr}
+  .span-5,.span-7,.span-4,.span-8,.span-6,.span-3{grid-column:span 1}
+  .metrics-row{grid-template-columns:repeat(2,1fr)}
+  .protocols-grid{grid-template-columns:1fr}
+  .infra-right{grid-template-columns:repeat(2,1fr)}
+  .cta-inner{flex-direction:column;align-items:flex-start}
+  .cta-banner{padding:var(--space-8)}
+  .hero-cta-group{flex-direction:column}
+  .btn-primary,.btn-ghost{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<section class="physio-section" id="physiops">
+  <div class="container">
+    <div class="hero-layout">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="pulse-dot"></span>
+          HumanOS &middot; PhysioPS Module &middot; Live
+        </div>
+        <h1 class="hero-title">
+          Autonomic Nervous<br>
+          System Testing<br>
+          <span class="accent-teal">at Edge Speed</span>
+        </h1>
+        <p class="hero-subtitle">
+          PhysioPS delivers real-time ANS biometric intelligence &mdash; mapping sympathetic, 
+          parasympathetic, and enteric balance with microsecond precision. 
+          Powered by the <strong style="color:#eef4fa">HumanOS AI Grid</strong> and deployed 
+          across <strong style="color:#eef4fa">Akamai Linode edge nodes</strong> worldwide.
+        </p>
+        <div class="status-strip">
+          <div class="status-chip"><span class="dot dot-green"></span> Edge Grid Active</div>
+          <div class="status-chip"><span class="dot dot-teal"></span> ANS Stream Online</div>
+          <div class="status-chip"><span class="dot dot-amber"></span> HRV Monitoring</div>
+          <div class="status-chip"><span class="dot dot-violet"></span> AI Inference: Ready</div>
+        </div>
+        <div class="hero-cta-group">
+          <a href="#" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+            Run ANS Assessment
+          </a>
+          <a href="#protocols" class="btn-ghost">
+            View Protocols
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-img-wrap">
+          <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/515b1b5e-7a43-4a86-adf7-0c7309afd345.png"
+            alt="PhysioPS HumanOS ANS neural network on Akamai edge grid"
+            width="720" height="450" loading="eager">
+          <div class="hero-badge"><span class="dot dot-teal"></span> 24 Edge Nodes &middot; &lt;8ms Latency</div>
+          <div class="hero-badge-live">&#9679; LIVE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="metrics-bar">
+  <div class="container">
+    <div class="metrics-row">
+      <div class="metric-item">
+        <div class="metric-value metric-teal">68.4<span style="font-size:var(--text-sm);color:var(--color-text-faint)"> ms</span></div>
+        <div class="metric-label">HRV Baseline</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value metric-green">0.84</div>
+        <div class="metric-label">ANS Coherence</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value metric-amber">62<span style="font-size:var(--text-sm);color:var(--color-text-faint)">%</span></div>
+        <div class="metric-label">Sympathetic</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value metric-violet">7.2<span style="font-size:var(--text-sm);color:var(--color-text-faint)"> ms</span></div>
+        <div class="metric-label">Edge Latency</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value metric-white">99.97<span style="font-size:var(--text-sm);color:var(--color-text-faint)">%</span></div>
+        <div class="metric-label">Uptime SLA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="features-section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div>
+        <div class="section-kicker">Core Capabilities</div>
+        <h2 class="section-title">The Complete ANS<br>Intelligence Stack</h2>
+      </div>
+      <p class="section-desc">From raw biometric input to AI-interpreted ANS state mapping &mdash; all processing distributed across the Akamai edge AI grid.</p>
+    </div>
+    <div class="bento-grid">
+
+      <!-- HRV Live Monitor — span 7 -->
+      <div class="bento-card hrv-card span-7 fade-in">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);align-items:start">
+          <div>
+            <div class="card-icon icon-teal">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:var(--space-2);margin-bottom:var(--space-2)">
+              <span class="hrv-score">68.4</span><span class="hrv-unit">ms RMSSD</span>
+            </div>
+            <div class="card-title" style="margin-bottom:var(--space-2)">Real-Time HRV Monitor</div>
+            <p class="card-body">Continuous heart rate variability capture with sub-millisecond precision. Beat-to-beat interval analysis streams directly to the HumanOS edge inference engine.</p>
+            <div class="balance-row" style="margin-top:var(--space-5)">
+              <span class="balance-label" style="color:var(--color-amber)">SYM</span>
+              <div class="balance-track"><div class="balance-fill fill-symp" style="width:62%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-amber);width:30px">62%</span>
+            </div>
+            <div class="balance-row">
+              <span class="balance-label" style="color:var(--color-primary)">PNS</span>
+              <div class="balance-track"><div class="balance-fill fill-para" style="width:38%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-primary);width:30px">38%</span>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3)">
+              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint)">LIVE SIGNAL</span>
+              <span class="hrv-status"><span class="dot dot-green"></span> Normal</span>
+            </div>
+            <svg class="waveform-svg" viewBox="0 0 300 60" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1dd6e0" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#1dd6e0" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path class="waveform-fill" d="M0 40 Q15 40 20 40 L25 20 L30 55 L35 5 L40 50 L45 40 Q55 40 60 40 L65 22 L70 53 L75 8 L80 48 L85 40 Q100 40 105 40 L110 24 L115 52 L120 10 L125 46 L130 40 Q145 40 150 40 L155 19 L160 56 L165 6 L170 49 L175 40 Q190 40 195 40 L200 21 L205 54 L210 7 L215 50 L220 40 Q235 40 240 40 L245 23 L250 51 L255 11 L260 47 L265 40 Q280 40 285 40 L290 22 L295 53 L300 40 L300 60 L0 60 Z"/>
+              <path class="waveform-line" d="M0 40 Q15 40 20 40 L25 20 L30 55 L35 5 L40 50 L45 40 Q55 40 60 40 L65 22 L70 53 L75 8 L80 48 L85 40 Q100 40 105 40 L110 24 L115 52 L120 10 L125 46 L130 40 Q145 40 150 40 L155 19 L160 56 L165 6 L170 49 L175 40 Q190 40 195 40 L200 21 L205 54 L210 7 L215 50 L220 40 Q235 40 240 40 L245 23 L250 51 L255 11 L260 47 L265 40 Q280 40 285 40 L290 22 L295 53 L300 40"/>
+            </svg>
+            <div style="display:flex;justify-content:space-between;margin-top:var(--space-2)">
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-faint)">-30s</span>
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-faint)">NOW</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Inference — span 5 -->
+      <div class="bento-card span-5 fade-in">
+        <div class="card-icon icon-violet">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="card-title">AI Inference Engine</div>
+        <p class="card-body" style="margin-bottom:var(--space-4)">HumanOS multimodal model interprets ANS telemetry in real-time &mdash; identifying dysregulation patterns, stress signatures, and recovery windows with clinical-grade accuracy.</p>
+        <div class="ai-metrics-grid">
+          <div class="ai-metric-box"><div class="ai-metric-num metric-violet">97.3<span style="font-size:var(--text-xs)">%</span></div><div class="ai-metric-desc">Accuracy</div></div>
+          <div class="ai-metric-box"><div class="ai-metric-num metric-teal">&lt;12<span style="font-size:var(--text-xs)">ms</span></div><div class="ai-metric-desc">Inference</div></div>
+          <div class="ai-metric-box"><div class="ai-metric-num metric-amber">6</div><div class="ai-metric-desc">ANS States</div></div>
+          <div class="ai-metric-box"><div class="ai-metric-num metric-green">24/7</div><div class="ai-metric-desc">Edge Processing</div></div>
+        </div>
+      </div>
+
+      <!-- Edge Network — span 4 -->
+      <div class="bento-card span-4 fade-in">
+        <div class="card-icon icon-teal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="card-title">Akamai Edge Network</div>
+        <p class="card-body" style="margin-bottom:var(--space-4)">PhysioPS deploys across 24 Akamai Linode edge regions, ensuring biometric data is processed at the nearest node &mdash; sub-10ms round-trip globally.</p>
+        <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/f5afbb51-fbd4-4d92-8cc3-70e6cbece687.png"
+          alt="Akamai Linode edge AI grid distributed node network"
+          class="edge-card-img" width="400" height="140" loading="lazy">
+        <ul class="node-list">
+          <li class="node-item"><span class="node-region">US-East / Newark</span><span class="node-latency">4.2ms</span><span class="node-status-badge">ACTIVE</span></li>
+          <li class="node-item"><span class="node-region">EU-West / Frankfurt</span><span class="node-latency">6.8ms</span><span class="node-status-badge">ACTIVE</span></li>
+          <li class="node-item"><span class="node-region">APAC / Singapore</span><span class="node-latency">9.1ms</span><span class="node-status-badge">ACTIVE</span></li>
+        </ul>
+      </div>
+
+      <!-- Biometric Telemetry — featured span 5 -->
+      <div class="bento-card card-featured span-5 fade-in">
+        <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/f19e72ab-2cfd-4f06-9daa-a9a6d783e596.png"
+          alt="ANS HRV biometric telemetry dashboard" class="card-img" width="500" height="200" loading="lazy">
+        <div class="card-content">
+          <div class="card-title">Biometric Telemetry</div>
+          <p class="card-body">Multi-channel sensor fusion &mdash; PPG, ECG, GSR, temperature, and respiratory rate &mdash; processed through HumanOS into unified ANS state scores.</p>
+          <div class="protocol-pills">
+            <span class="pill pill-teal">PPG</span><span class="pill pill-teal">ECG</span>
+            <span class="pill pill-amber">GSR</span><span class="pill pill-amber">RESP</span>
+            <span class="pill pill-violet">TEMP</span><span class="pill pill-muted">+4 more</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HumanOS Platform — span 3 -->
+      <div class="bento-card span-3 fade-in">
+        <div class="card-icon icon-amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+        </div>
+        <div class="card-title">HumanOS Platform</div>
+        <p class="card-body">Unified OS for human physiology &mdash; integrating ANS data with cognitive load, recovery state, and performance readiness into one coherent model.</p>
+        <div class="protocol-pills">
+          <span class="pill pill-amber">PhysioPS</span>
+          <span class="pill pill-teal">NeuroSync</span>
+          <span class="pill pill-violet">RecoveryAI</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="infra-strip">
+  <div class="container">
+    <div class="infra-layout">
+      <div>
+        <div class="infra-kicker">Powered By</div>
+        <h3 class="infra-title">Akamai Linode<br>AI Grid Architecture</h3>
+        <p class="infra-desc">PhysioPS is built on a distributed edge computing fabric &mdash; Akamai Linode's globally distributed infrastructure ensures biometric AI processing happens at the edge, not in a distant datacenter. Zero cold starts. Deterministic sub-10ms latency. Compliant data residency.</p>
+      </div>
+      <div class="infra-right fade-in">
+        <div class="infra-box">
+          <span class="infra-box-icon">&#9889;</span>
+          <div class="infra-box-name">Edge Compute</div>
+          <div class="infra-box-detail">Akamai Linode<br>24 Global Regions</div>
+        </div>
+        <div class="infra-box">
+          <span class="infra-box-icon">&#129504;</span>
+          <div class="infra-box-name">AI Grid</div>
+          <div class="infra-box-detail">HumanOS Model<br>Multimodal Inference</div>
+        </div>
+        <div class="infra-box">
+          <span class="infra-box-icon">&#128274;</span>
+          <div class="infra-box-name">Compliance</div>
+          <div class="infra-box-detail">HIPAA Ready<br>Data Residency</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="protocols-section" id="protocols">
+  <div class="container">
+    <div class="section-header fade-in" style="grid-template-columns:1fr;margin-bottom:var(--space-10)">
+      <div>
+        <div class="section-kicker">Test Protocols</div>
+        <h2 class="section-title">Clinical ANS Assessment Suite</h2>
+      </div>
+    </div>
+    <div class="protocols-grid">
+      <div class="protocol-card proto-teal fade-in">
+        <div class="proto-num">01 &mdash; Autonomic Tone</div>
+        <div class="proto-title">Resting ANS<br>Baseline Protocol</div>
+        <p class="proto-desc">5-minute supine resting capture establishing sympathovagal balance baseline. HRV spectral analysis (LF/HF ratio), baroreflex sensitivity, and cardiac vagal tone index computed at edge.</p>
+        <div class="proto-tags"><span class="pill pill-teal">HRV Spectral</span><span class="pill pill-teal">BRS</span><span class="pill pill-muted">5 min</span></div>
+      </div>
+      <div class="protocol-card proto-amber fade-in">
+        <div class="proto-num">02 &mdash; Stress Response</div>
+        <div class="proto-title">Sympathetic<br>Activation Test</div>
+        <p class="proto-desc">Cold pressor and cognitive load challenges measure sympathetic reactivity, cortisol proxy, and catecholamine response curves. AI model scores dysregulation severity in real-time.</p>
+        <div class="proto-tags"><span class="pill pill-amber">Cold Pressor</span><span class="pill pill-amber">GSR Reactivity</span><span class="pill pill-muted">12 min</span></div>
+      </div>
+      <div class="protocol-card proto-violet fade-in">
+        <div class="proto-num">03 &mdash; Recovery Mapping</div>
+        <div class="proto-title">Parasympathetic<br>Rebound Analysis</div>
+        <p class="proto-desc">Post-stress HRV recovery kinetics, vagal reactivation slope, and RMSSD restoration trajectory charted against population norms. Outputs actionable recovery readiness score.</p>
+        <div class="proto-tags"><span class="pill pill-violet">RMSSD Recovery</span><span class="pill pill-violet">Vagal Index</span><span class="pill pill-muted">20 min</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-block:var(--space-8) var(--space-20)">
+  <div class="container">
+    <div class="cta-banner fade-in">
+      <div class="cta-inner">
+        <div>
+          <div class="cta-label">Get Started with PhysioPS</div>
+          <div class="cta-title">Map Your ANS.<br>Understand Your Biology.</div>
+          <p class="cta-sub">Begin your first HumanOS ANS assessment &mdash; streaming live to the Akamai edge AI grid, results in under 60 seconds.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="#" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+            Start Free Assessment
+          </a>
+          <a href="#" class="btn-ghost" style="text-align:center;justify-content:center">View API Docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.bento-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100).toFixed(1)+'%');
+    card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100).toFixed(1)+'%');
+  });
+});
+const balObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.balance-fill').forEach(bar => {
+        const w = bar.style.width; bar.style.width='0%';
+        requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width=w));
+      });
+      balObs.unobserve(e.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.hrv-card').forEach(c=>balObs.observe(c));
+document.querySelectorAll('.infra-box').forEach(b=>{
+  b.addEventListener('mouseenter',()=>b.style.setProperty('--color-border','rgba(80,200,220,.22)'));
+  b.addEventListener('mouseleave',()=>b.style.setProperty('--color-border','rgba(80,200,220,.10)'));
+});
+</script>
+</body>
+</html>
