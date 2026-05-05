@@ -3,438 +3,1657 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhysioPS — HumanOS ANS Testing</title>
+<title>PhysioPS · HumanOS ANS Testing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,800,900&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@300,400,500,700,800,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/*
+  Art direction: PhysioPS × HumanOS ANS Testing Platform
+  Palette: Dark native deep-space, accent: #00e5ff electric teal (life signal)
+  Typography: Cabinet Grotesk (display) + Inter (body) + JetBrains Mono (data)
+  Density: Balanced — clinical precision with breathing room
+*/
+
+/* ── PhysioPS Brand Token Master Sheet ── */
 :root {
+  /* Accent */
+  --accent:             #00e5ff;
+  --accent-dim:         #00b8cc;
+  --accent-blue:        #0077ff;
+  --accent-glow:        rgba(0, 229, 255, 0.15);
+  --accent-glow-strong: rgba(0, 229, 255, 0.30);
+
+  /* Gradient System */
+  --gradient-brand:    linear-gradient(135deg, #00e5ff 0%, #0077ff 100%);
+  --gradient-hero-overlay: linear-gradient(180deg,rgba(6,10,16,0.30) 0%,rgba(6,10,16,0.70) 40%,rgba(6,10,16,0.95) 80%,#060a10 100%);
+  --gradient-cta-bg:   linear-gradient(180deg, #060a10 0%, #0c1220 50%, #060a10 100%);
+  --gradient-timeline: linear-gradient(to bottom, #00e5ff, #0077ff, transparent);
+  --gradient-neural:   linear-gradient(90deg, transparent 0%, #00e5ff 20%, #0077ff 50%, #00e5ff 80%, transparent 100%);
+  --gradient-glass:    linear-gradient(135deg, rgba(15,22,40,0.8) 0%, rgba(12,18,32,0.6) 100%);
+
+  /* Background Scale */
+  --bg:             #060a10;
+  --bg-elevated:    #0c1220;
+  --bg-card:        #0f1628;
+  --bg-card-hover:  #131c34;
+  --surface:        #111827;
+  --surface-2:      #1a2540;
+
+  /* Text Scale */
+  --text:           #e8edf5;
+  --text-muted:     #8892a8;
+  --text-faint:     #4a5568;
+
+  /* Border Tokens */
+  --border:         rgba(255, 255, 255, 0.06);
+  --border-accent:  rgba(0, 229, 255, 0.15);
+
+  /* Semantic / ANS Channel Colors */
+  --color-success:            #22c55e;
+  --color-warning:            #f59e0b;
+  --color-danger:             #ef4444;
+  --color-info:               #3b82f6;
+  --color-parasympathetic:    #00e5ff;
+  --color-sympathetic:        #0077ff;
+  --color-balance:            #7c3aed;
+  --color-hrv:                #10b981;
+
+  /* Typography */
+  --font-display: 'Cabinet Grotesk', 'Inter', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Fluid Type Scale */
   --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
   --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
   --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
   --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
   --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
   --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
-  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
-  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
-  --space-12:3rem;--space-16:4rem;--space-20:5rem;--space-24:6rem;
-  --radius-sm:0.25rem;--radius-md:0.5rem;--radius-lg:0.75rem;
-  --radius-xl:1rem;--radius-2xl:1.5rem;--radius-full:9999px;
-  --transition:200ms cubic-bezier(0.16,1,0.3,1);
-  --font-display:'Satoshi','DM Sans',sans-serif;
-  --font-body:'DM Sans',sans-serif;
-  --font-mono:'DM Mono',monospace;
-  --color-bg:#080c10;--color-surface:#0d1219;--color-surface-2:#111822;
-  --color-surface-3:#16202e;
-  --color-border:rgba(80,200,220,0.10);--color-border-hi:rgba(80,200,220,0.22);
-  --color-divider:rgba(255,255,255,0.06);
-  --color-text:#dce8f0;--color-text-muted:#7a9ab0;
-  --color-text-faint:#3d5a70;--color-text-inverse:#0a1018;
-  --color-primary:#1dd6e0;--color-primary-dim:#0e8f97;
-  --color-primary-glow:rgba(29,214,224,0.18);--color-primary-bg:rgba(29,214,224,0.06);
-  --color-amber:#f5a623;--color-amber-dim:#b87415;
-  --color-amber-glow:rgba(245,166,35,0.15);--color-amber-bg:rgba(245,166,35,0.06);
-  --color-violet:#a78bfa;--color-violet-dim:#6d46e8;
-  --color-violet-glow:rgba(167,139,250,0.12);--color-violet-bg:rgba(167,139,250,0.05);
-  --color-green:#34d399;--color-green-dim:#0f8c5a;
-  --color-green-glow:rgba(52,211,153,0.12);
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.5),0 0 0 1px rgba(80,200,220,0.06);
-  --shadow-lg:0 12px 40px rgba(0,0,0,0.6),0 0 32px rgba(29,214,224,0.06);
-  --content-default:1200px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.6;overflow-x:hidden}
-img{display:block;max-width:100%;height:auto}
-button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--color-surface)}
-::-webkit-scrollbar-thumb{background:var(--color-primary-dim);border-radius:3px}
-.container{max-width:var(--content-default);margin-inline:auto;padding-inline:var(--space-6)}
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+  --text-hero: clamp(3rem,     0.5rem  + 7vw,    7rem);
 
-/* ── PHYSIO SECTION ─────────────────────────────────── */
-.physio-section{position:relative;overflow:hidden;padding-block:var(--space-20) var(--space-16);background:var(--color-bg)}
-.physio-section::before{content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle at 20% 30%,rgba(29,214,224,0.07) 0%,transparent 55%),
-    radial-gradient(circle at 80% 70%,rgba(167,139,250,0.06) 0%,transparent 50%),
-    radial-gradient(circle at 50% 50%,rgba(245,166,35,0.03) 0%,transparent 70%),
-    linear-gradient(rgba(29,214,224,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(29,214,224,0.03) 1px,transparent 1px);
-  background-size:100% 100%,100% 100%,100% 100%,48px 48px,48px 48px;
-  pointer-events:none;animation:gridPulse 8s ease-in-out infinite alternate}
-@keyframes gridPulse{0%{opacity:.7}100%{opacity:1}}
+  /* 4px Spacing Scale */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
 
-.hero-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12);align-items:center;position:relative;z-index:1}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-bg);border:1px solid var(--color-border-hi);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);margin-bottom:var(--space-5)}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary);animation:pulseDot 1.8s ease-in-out infinite}
-@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
-.hero-title{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:900;line-height:1.05;letter-spacing:-.03em;color:#eef4fa;margin-bottom:var(--space-4)}
-.accent-teal{color:var(--color-primary)}
-.accent-amber{color:var(--color-amber)}
-.hero-subtitle{font-size:var(--text-base);color:var(--color-text-muted);line-height:1.7;max-width:52ch;margin-bottom:var(--space-8)}
-.status-strip{display:flex;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-8)}
-.status-chip{display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);transition:border-color var(--transition),color var(--transition)}
-.status-chip:hover{border-color:var(--color-border-hi);color:var(--color-text)}
-.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.dot-green{background:var(--color-green);box-shadow:0 0 6px var(--color-green);animation:pulseDot 2s ease-in-out infinite}
-.dot-amber{background:var(--color-amber);box-shadow:0 0 6px var(--color-amber);animation:pulseDot 2.4s ease-in-out infinite}
-.dot-violet{background:var(--color-violet);box-shadow:0 0 6px var(--color-violet);animation:pulseDot 2.8s ease-in-out infinite}
-.dot-teal{background:var(--color-primary);box-shadow:0 0 6px var(--color-primary);animation:pulseDot 1.6s ease-in-out infinite}
-.hero-cta-group{display:flex;gap:var(--space-3);flex-wrap:wrap}
-.btn-primary{display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary);color:var(--color-text-inverse);font-family:var(--font-body);font-size:var(--text-sm);font-weight:700;padding:var(--space-3) var(--space-6);border-radius:var(--radius-lg);text-decoration:none;transition:background var(--transition),box-shadow var(--transition),transform var(--transition);box-shadow:0 0 20px rgba(29,214,224,.25)}
-.btn-primary:hover{background:#2ee8f3;box-shadow:0 0 32px rgba(29,214,224,.4);transform:translateY(-1px)}
-.btn-primary:active{transform:translateY(0)}
-.btn-ghost{display:inline-flex;align-items:center;gap:var(--space-2);background:transparent;color:var(--color-text-muted);font-size:var(--text-sm);font-weight:500;padding:var(--space-3) var(--space-5);border:1px solid var(--color-border);border-radius:var(--radius-lg);text-decoration:none;transition:border-color var(--transition),color var(--transition),background var(--transition)}
-.btn-ghost:hover{border-color:var(--color-border-hi);color:var(--color-text);background:var(--color-surface)}
-.hero-visual{position:relative}
-.hero-img-wrap{position:relative;border-radius:var(--radius-2xl);overflow:hidden;border:1px solid var(--color-border);box-shadow:var(--shadow-lg),0 0 60px rgba(29,214,224,.08)}
-.hero-img-wrap img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
-.hero-badge{position:absolute;bottom:var(--space-4);left:var(--space-4);display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-primary);background:rgba(8,12,16,.85);border:1px solid var(--color-border-hi);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.hero-badge-live{position:absolute;top:var(--space-3);right:var(--space-3);display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-xs);color:#0a1018;background:var(--color-primary);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);font-weight:600}
+  /* Radius */
+  --radius-sm:   0.375rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-2xl:  1.5rem;
+  --radius-full: 9999px;
 
-/* ── METRICS BAR ─────────────────────────────────────── */
-.metrics-bar{border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider);background:var(--color-surface);padding-block:var(--space-5);position:relative;overflow:hidden}
-.metrics-bar::before{content:'';position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--color-primary),transparent);animation:scanLine 4s ease-in-out infinite}
-@keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-4);align-items:center}
-.metric-item{text-align:center;padding:var(--space-2) var(--space-3);border-right:1px solid var(--color-divider)}
-.metric-item:last-child{border-right:none}
-.metric-value{font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;line-height:1;margin-bottom:var(--space-1);letter-spacing:-.03em}
-.metric-label{font-size:var(--text-xs);color:var(--color-text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono)}
-.metric-teal{color:var(--color-primary)}
-.metric-amber{color:var(--color-amber)}
-.metric-green{color:var(--color-green)}
-.metric-violet{color:var(--color-violet)}
-.metric-white{color:#eef4fa}
+  /* Transitions */
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 
-/* ── FEATURES SECTION ────────────────────────────────── */
-.features-section{padding-block:var(--space-20);position:relative;overflow:hidden}
-.features-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 90% 10%,rgba(167,139,250,.05) 0%,transparent 50%),radial-gradient(circle at 10% 90%,rgba(29,214,224,.04) 0%,transparent 50%);pointer-events:none}
-.section-header{margin-bottom:var(--space-12);display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--space-8)}
-.section-kicker{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-primary);margin-bottom:var(--space-3);display:flex;align-items:center;gap:var(--space-2)}
-.section-kicker::before{content:'';display:inline-block;width:24px;height:1px;background:var(--color-primary)}
-.section-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;line-height:1.1;letter-spacing:-.025em;color:#eef4fa}
-.section-desc{font-size:var(--text-sm);color:var(--color-text-muted);max-width:42ch;line-height:1.7;text-align:right}
+  /* Shadows (teal-tinted for dark surface) */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+  --shadow-accent: 0 0 24px rgba(0, 229, 255, 0.20);
+  --shadow-accent-strong: 0 0 48px rgba(0, 229, 255, 0.35);
 
-.bento-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-4)}
-.bento-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);position:relative;overflow:hidden;transition:border-color var(--transition),box-shadow var(--transition),transform var(--transition)}
-.bento-card:hover{border-color:var(--color-border-hi);box-shadow:var(--shadow-md),0 0 24px rgba(29,214,224,.06);transform:translateY(-2px)}
-.bento-card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(29,214,224,.04),transparent 60%);opacity:0;transition:opacity var(--transition);pointer-events:none}
-.bento-card:hover::before{opacity:1}
-.span-5{grid-column:span 5}.span-7{grid-column:span 7}.span-4{grid-column:span 4}
-.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-3{grid-column:span 3}
-
-.card-icon{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-4);font-size:20px;flex-shrink:0}
-.icon-teal{background:var(--color-primary-bg);border:1px solid rgba(29,214,224,.15);color:var(--color-primary)}
-.icon-amber{background:var(--color-amber-bg);border:1px solid rgba(245,166,35,.15);color:var(--color-amber)}
-.icon-violet{background:var(--color-violet-bg);border:1px solid rgba(167,139,250,.15);color:var(--color-violet)}
-.icon-green{background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);color:var(--color-green)}
-.card-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:#eef4fa;margin-bottom:var(--space-2);line-height:1.2}
-.card-body{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;max-width:48ch}
-
-.card-featured{padding:0;display:flex;flex-direction:column}
-.card-featured .card-img{width:100%;height:200px;object-fit:cover;border-radius:calc(var(--radius-xl) - 1px) calc(var(--radius-xl) - 1px) 0 0}
-.card-featured .card-content{padding:var(--space-5) var(--space-6);flex:1}
-.hrv-card{background:var(--color-surface-2)}
-.hrv-score{font-family:var(--font-mono);font-size:var(--text-2xl);font-weight:700;color:var(--color-primary);line-height:1;letter-spacing:-.04em}
-.hrv-unit{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono);margin-left:var(--space-1)}
-.hrv-status{display:inline-flex;align-items:center;gap:var(--space-1);font-size:var(--text-xs);color:var(--color-green);background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);border-radius:var(--radius-full);padding:var(--space-1) var(--space-2);font-family:var(--font-mono)}
-
-.waveform-svg{width:100%;height:60px;margin-top:var(--space-3);overflow:visible}
-.waveform-line{fill:none;stroke:var(--color-primary);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000;animation:drawLine 2.5s ease-out .3s forwards}
-.waveform-fill{fill:url(#waveGrad);opacity:0;animation:fadeIn 1s ease-out 2.2s forwards}
-@keyframes drawLine{to{stroke-dashoffset:0}}
-@keyframes fadeIn{to{opacity:1}}
-
-.balance-row{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-3)}
-.balance-label{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);width:30px;flex-shrink:0}
-.balance-track{flex:1;height:6px;background:var(--color-surface-3);border-radius:var(--radius-full);overflow:hidden}
-.balance-fill{height:100%;border-radius:var(--radius-full);transition:width 1.5s cubic-bezier(.16,1,.3,1)}
-.fill-symp{background:linear-gradient(90deg,var(--color-amber),var(--color-amber-dim))}
-.fill-para{background:linear-gradient(90deg,var(--color-primary-dim),var(--color-primary))}
-.edge-card-img{width:100%;height:140px;object-fit:cover;border-radius:var(--radius-lg);margin-bottom:var(--space-4);border:1px solid var(--color-border)}
-.node-list{list-style:none;display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-4)}
-.node-item{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted);padding:var(--space-2) var(--space-3);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md)}
-.node-region{color:var(--color-text)}
-.node-latency{color:var(--color-green)}
-.node-status-badge{font-size:10px;padding:2px 7px;border-radius:var(--radius-full);background:var(--color-green-glow);border:1px solid rgba(52,211,153,.15);color:var(--color-green)}
-.ai-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-top:var(--space-5)}
-.ai-metric-box{padding:var(--space-3) var(--space-4);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg)}
-.ai-metric-num{font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;line-height:1;margin-bottom:var(--space-1)}
-.ai-metric-desc{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono)}
-.protocol-pills{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)}
-.pill{font-family:var(--font-mono);font-size:var(--text-xs);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);border:1px solid}
-.pill-teal{color:var(--color-primary);border-color:rgba(29,214,224,.2);background:var(--color-primary-bg)}
-.pill-amber{color:var(--color-amber);border-color:rgba(245,166,35,.2);background:var(--color-amber-bg)}
-.pill-violet{color:var(--color-violet);border-color:rgba(167,139,250,.2);background:var(--color-violet-bg)}
-.pill-muted{color:var(--color-text-muted);border-color:var(--color-border);background:var(--color-surface-2)}
-
-/* ── INFRA STRIP ─────────────────────────────────────── */
-.infra-strip{padding-block:var(--space-12);border-top:1px solid var(--color-divider);background:var(--color-surface);position:relative;overflow:hidden}
-.infra-strip::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(29,214,224,.04) 0%,transparent 30%,transparent 70%,rgba(167,139,250,.04) 100%);pointer-events:none}
-.infra-layout{display:grid;grid-template-columns:1fr auto;align-items:center;gap:var(--space-10);position:relative;z-index:1}
-.infra-kicker{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-violet);margin-bottom:var(--space-2)}
-.infra-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;letter-spacing:-.025em;color:#eef4fa;margin-bottom:var(--space-3)}
-.infra-desc{font-size:var(--text-sm);color:var(--color-text-muted);max-width:54ch;line-height:1.7}
-.infra-right{display:grid;grid-template-columns:repeat(3,140px);gap:var(--space-3)}
-.infra-box{padding:var(--space-4);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-xl);text-align:center;transition:border-color var(--transition),box-shadow var(--transition)}
-.infra-box:hover{border-color:var(--color-border-hi);box-shadow:0 0 20px rgba(29,214,224,.08)}
-.infra-box-icon{font-size:28px;margin-bottom:var(--space-2);display:block}
-.infra-box-name{font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:var(--color-text);margin-bottom:var(--space-1)}
-.infra-box-detail{font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono);line-height:1.5}
-
-/* ── PROTOCOLS ──────────────────────────────────────── */
-.protocols-section{padding-block:var(--space-20);position:relative}
-.protocols-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(29,214,224,.04) 0%,transparent 60%);pointer-events:none}
-.protocols-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);position:relative;z-index:1}
-.protocol-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);transition:border-color var(--transition),transform var(--transition);position:relative;overflow:hidden}
-.protocol-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity var(--transition)}
-.proto-teal::after{background:var(--color-primary)}
-.proto-amber::after{background:var(--color-amber)}
-.proto-violet::after{background:var(--color-violet)}
-.protocol-card:hover::after{opacity:1}
-.protocol-card:hover{border-color:var(--color-border-hi);transform:translateY(-3px)}
-.proto-num{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);margin-bottom:var(--space-4);letter-spacing:.1em}
-.proto-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:#eef4fa;margin-bottom:var(--space-3);line-height:1.2}
-.proto-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;margin-bottom:var(--space-5)}
-.proto-tags{display:flex;flex-wrap:wrap;gap:var(--space-2)}
-
-/* ── CTA BANNER ──────────────────────────────────────── */
-.cta-banner{position:relative;overflow:hidden;border-radius:var(--radius-2xl);background:var(--color-surface-2);border:1px solid var(--color-border-hi);padding:var(--space-12)}
-.cta-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(29,214,224,.1) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(167,139,250,.08) 0%,transparent 60%);pointer-events:none}
-.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);position:relative;z-index:1}
-.cta-label{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.14em;color:var(--color-primary);margin-bottom:var(--space-3)}
-.cta-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;letter-spacing:-.025em;color:#eef4fa;margin-bottom:var(--space-3);line-height:1.1}
-.cta-sub{font-size:var(--text-sm);color:var(--color-text-muted);max-width:50ch;line-height:1.6}
-.cta-actions{display:flex;flex-direction:column;gap:var(--space-3);flex-shrink:0}
-
-.fade-in{opacity:1}
-@supports(animation-timeline:scroll()){
-  .fade-in{opacity:0;animation:revealFade linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
-  @keyframes revealFade{to{opacity:1}}
+  /* Content Widths */
+  --content-narrow:  640px;
+  --content-default: 960px;
+  --content-wide:    1200px;
+  --content-full:    100%;
 }
 
-@media(max-width:1024px){
-  .hero-layout{grid-template-columns:1fr;gap:var(--space-8)}
-  .hero-subtitle{max-width:none}
-  .metrics-row{grid-template-columns:repeat(3,1fr)}
-  .bento-grid{grid-template-columns:1fr 1fr}
-  .span-5,.span-7,.span-4,.span-8,.span-6{grid-column:span 2}
-  .span-3{grid-column:span 1}
-  .infra-layout{grid-template-columns:1fr}
-  .infra-right{grid-template-columns:repeat(3,1fr)}
-  .protocols-grid{grid-template-columns:1fr 1fr}
-  .section-header{grid-template-columns:1fr}
-  .section-desc{text-align:left}
+/* ── Base Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-16);
 }
-@media(max-width:640px){
-  .bento-grid{grid-template-columns:1fr}
-  .span-5,.span-7,.span-4,.span-8,.span-6,.span-3{grid-column:span 1}
-  .metrics-row{grid-template-columns:repeat(2,1fr)}
-  .protocols-grid{grid-template-columns:1fr}
-  .infra-right{grid-template-columns:repeat(2,1fr)}
-  .cta-inner{flex-direction:column;align-items:flex-start}
-  .cta-banner{padding:var(--space-8)}
-  .hero-cta-group{flex-direction:column}
-  .btn-primary,.btn-ghost{justify-content:center}
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text);
+  background-color: var(--bg);
+  line-height: 1.6;
+}
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+ul[role="list"], ol[role="list"] { list-style: none; }
+input, button, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; font-family: var(--font-display); }
+p, li, figcaption { text-wrap: pretty; }
+button { cursor: pointer; background: none; border: none; }
+::selection { background: rgba(0, 229, 255, 0.20); color: var(--text); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+a, button, [role="button"] {
+  transition: color var(--transition-interactive), background var(--transition-interactive),
+    border-color var(--transition-interactive), box-shadow var(--transition-interactive),
+    transform var(--transition-interactive);
+}
+
+/* ── Scroll Reveal ── */
+@supports (animation-timeline: scroll()) {
+  .fade-in {
+    opacity: 0;
+    animation: reveal-fade linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+  .reveal-up {
+    clip-path: inset(30% 0 0 0);
+    opacity: 0;
+    animation: reveal-clip-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+}
+@keyframes reveal-fade { to { opacity: 1; } }
+@keyframes reveal-clip-up { to { clip-path: inset(0 0 0 0); opacity: 1; } }
+
+/* ── Scan line animation ── */
+@keyframes scan-line {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes waveform-draw {
+  from { stroke-dashoffset: 1200; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes data-count {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes shimmer-bar {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes float-card {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes edge-ping {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ── Utility ── */
+.container { max-width: var(--content-wide); margin-inline: auto; padding-inline: var(--space-6); }
+.container--default { max-width: var(--content-default); }
+.mono { font-family: var(--font-mono); }
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* ── Section Tag / Eyebrow ── */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+}
+.section-tag::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ══════════════════════════════════════════
+   SECTION 1: HERO
+══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-hero-overlay);
+}
+/* Scan line */
+.hero__scan {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__scan::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  opacity: 0.4;
+  animation: scan-line 6s linear infinite;
+  animation-delay: 1s;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-20) var(--space-6) var(--space-16);
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  width: 100%;
+}
+/* Nav bar */
+.hero__nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  padding: var(--space-5) var(--space-6);
+  background: linear-gradient(180deg, rgba(6,10,16,0.9) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+.nav__logo-mark {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.nav__logo-text {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.nav__logo-text span {
+  color: var(--accent);
+}
+.nav__pills {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.nav__pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  padding: var(--space-1) var(--space-3);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.pill-dot--warn { background: var(--color-warning); animation-delay: 0.3s; }
+.pill-dot--green { background: var(--color-success); animation-delay: 0.6s; }
+.pill-dot--blue { background: var(--color-info); animation-delay: 0.9s; }
+
+/* FDA Badge */
+.hero__fda {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-warning);
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.20);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.hero__fda svg { flex-shrink: 0; }
+
+/* Hero heading */
+.hero__h1 {
+  font-size: var(--text-hero);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--text);
+  max-width: 14ch;
+  margin-bottom: var(--space-5);
+}
+.hero__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  color: var(--text-muted);
+  max-width: 52ch;
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-12);
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform var(--transition-interactive), box-shadow var(--transition-interactive), background var(--transition-interactive);
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary {
+  background: var(--accent);
+  color: #060a10;
+  box-shadow: 0 0 0 0 rgba(0,229,255,0);
+}
+.btn--primary:hover {
+  background: #1aebff;
+  box-shadow: var(--shadow-accent);
+}
+.btn--secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-accent);
+  backdrop-filter: blur(8px);
+}
+.btn--secondary:hover {
+  background: var(--accent-glow);
+  border-color: rgba(0,229,255,0.35);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn--ghost:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+
+/* Live badge */
+.hero__live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-danger);
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.20);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  position: relative;
+}
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--color-danger);
+  border-radius: 50%;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+/* Floating stat cards */
+.hero__float-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.float-stat {
+  background: var(--gradient-glass);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  min-width: 120px;
+  animation: float-card 5s ease-in-out infinite;
+}
+.float-stat:nth-child(2) { animation-delay: 0.8s; }
+.float-stat:nth-child(3) { animation-delay: 1.6s; }
+.float-stat__val {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.2;
+  margin-bottom: var(--space-1);
+}
+.float-stat__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+/* ══════════════════════════════════════════
+   SECTION 2: ANS METRICS BAR
+══════════════════════════════════════════ */
+.metrics-bar {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.metrics-bar__scan {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-neural);
+  background-size: 200% 100%;
+  animation: shimmer-bar 2s linear infinite;
+}
+.metrics-bar__inner {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: var(--space-4) var(--space-6);
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  gap: 0;
+}
+.metric-stat {
+  padding: var(--space-4) var(--space-6);
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.metric-stat:last-child { border-right: none; }
+.metric-stat__val {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--accent);
+  margin-bottom: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+.metric-stat__label {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--space-1);
+}
+.metric-stat__sub {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+.metric-stat--symp .metric-stat__val { color: var(--color-sympathetic); }
+.metric-stat--hrv .metric-stat__val { color: var(--color-hrv); }
+.metric-stat--latency .metric-stat__val { color: var(--color-success); }
+.metric-stat--sla .metric-stat__val { color: var(--text); }
+
+/* ══════════════════════════════════════════
+   SECTION 3: BENTO FEATURE GRID
+══════════════════════════════════════════ */
+.features {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) 0;
+  background: var(--bg);
+}
+.features__header {
+  max-width: var(--content-wide);
+  margin: 0 auto var(--space-12);
+  padding: 0 var(--space-6);
+}
+.features__title {
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text);
+  max-width: 18ch;
+  margin-bottom: var(--space-4);
+}
+.features__desc {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: 52ch;
+  line-height: 1.7;
+}
+.bento {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: var(--space-4);
+}
+
+/* Base card */
+.bcard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive), background var(--transition-interactive), transform var(--transition-interactive);
+}
+.bcard:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-accent);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+.bcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-interactive);
+  pointer-events: none;
+}
+.bcard:hover::before { opacity: 1; }
+
+/* Grid placement */
+.bcard--hrv     { grid-column: span 7; grid-row: span 1; }
+.bcard--ai      { grid-column: span 5; grid-row: span 1; }
+.bcard--edge    { grid-column: span 5; grid-row: span 1; }
+.bcard--bio     { grid-column: span 4; grid-row: span 1; }
+.bcard--platform { grid-column: span 3; grid-row: span 1; }
+
+.bcard__tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.bcard__tag::before {
+  content: '//';
+  color: var(--text-faint);
+}
+.bcard__title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+  line-height: 1.2;
+}
+.bcard__desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-5);
+  max-width: 40ch;
+}
+
+/* HRV waveform card */
+.hrv-chart {
+  position: relative;
+  height: 80px;
+  margin-bottom: var(--space-5);
+}
+.hrv-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hrv-path {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 0;
+  animation: waveform-draw 3s cubic-bezier(0.16,1,0.3,1) both;
+  animation-delay: 0.3s;
+}
+.hrv-balance {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.hrv-channel {
+  padding: var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.hrv-channel__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+.hrv-channel--para .hrv-channel__label { color: var(--color-parasympathetic); }
+.hrv-channel--symp .hrv-channel__label { color: var(--color-sympathetic); }
+.hrv-channel__bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.hrv-channel__bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+}
+.hrv-channel--para .hrv-channel__bar-fill { background: var(--color-parasympathetic); width: 38%; }
+.hrv-channel--symp .hrv-channel__bar-fill { background: var(--color-sympathetic); width: 62%; }
+.hrv-channel__val {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  margin-top: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+.hrv-channel--para .hrv-channel__val { color: var(--color-parasympathetic); }
+.hrv-channel--symp .hrv-channel__val { color: var(--color-sympathetic); }
+
+/* AI card metrics grid */
+.ai-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.ai-metric {
+  padding: var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.ai-metric__val {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+.ai-metric__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.ai-metric--blue .ai-metric__val { color: var(--color-sympathetic); }
+.ai-metric--violet .ai-metric__val { color: var(--color-balance); }
+.ai-metric--green .ai-metric__val { color: var(--color-hrv); }
+
+/* Edge network viz */
+.edge-map {
+  position: relative;
+  height: 90px;
+  margin-bottom: var(--space-4);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edge-svg { width: 100%; height: 100%; }
+.edge-nodes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+.edge-node {
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.edge-node__city {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.edge-node__ms {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-success);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Biometric pills */
+.bio-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.bio-pill {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-accent);
+  background: var(--accent-glow);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.bio-pill::before {
+  content: '';
+  width: 5px; height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Platform module pills */
+.platform-mods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.platform-mod {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.platform-mod__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.platform-mod__name--physio { color: var(--accent); }
+.platform-mod__name--neuro  { color: var(--color-sympathetic); }
+.platform-mod__name--recov  { color: var(--color-hrv); }
+.platform-mod__name--atom   { color: var(--color-balance); }
+.platform-mod__status {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.platform-mod__status::before {
+  content: '';
+  width: 5px; height: 5px;
+  background: var(--color-success);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════
+   SECTION 4: INFRASTRUCTURE STRIP
+══════════════════════════════════════════ */
+.infra {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-10) 0;
+}
+.infra__inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-12);
+  align-items: center;
+}
+.infra__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.infra__stack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+.infra-block {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  position: relative;
+  overflow: hidden;
+}
+.infra-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--gradient-brand);
+}
+.infra-block__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.infra-block__logo-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.infra-block__title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2);
+}
+.infra-block__desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.infra-block__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.infra-badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 2px var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.infra-badge--accent { color: var(--accent); border-color: var(--border-accent); background: var(--accent-glow); }
+
+/* ══════════════════════════════════════════
+   SECTION 5: CLINICAL PROTOCOLS
+══════════════════════════════════════════ */
+.protocols {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) 0;
+  background: var(--bg);
+}
+.protocols__header {
+  max-width: var(--content-wide);
+  margin: 0 auto var(--space-12);
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+.protocols__title {
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  max-width: 18ch;
+}
+.protocols__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  text-align: right;
+  line-height: 1.8;
+}
+.proto-grid {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+.proto-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive),
+    background var(--transition-interactive), transform var(--transition-interactive);
+}
+.proto-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-3px);
+}
+.proto-card__top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.proto-card:hover .proto-card__top-bar { transform: scaleX(1); }
+.proto-card--baseline:hover { border-color: var(--border-accent); box-shadow: var(--shadow-accent); }
+.proto-card--baseline .proto-card__top-bar { background: var(--accent); }
+.proto-card--activation:hover { border-color: rgba(245,158,11,0.20); box-shadow: 0 0 24px rgba(245,158,11,0.12); }
+.proto-card--activation .proto-card__top-bar { background: var(--color-warning); }
+.proto-card--rebound:hover { border-color: rgba(124,58,237,0.25); box-shadow: 0 0 24px rgba(124,58,237,0.15); }
+.proto-card--rebound .proto-card__top-bar { background: var(--color-balance); }
+
+.proto-card__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-4);
+}
+.proto-card__icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  background: var(--surface);
+}
+.proto-card__icon svg { width: 20px; height: 20px; }
+.proto-card--baseline .proto-card__icon svg { stroke: var(--color-parasympathetic); }
+.proto-card--activation .proto-card__icon svg { stroke: var(--color-warning); }
+.proto-card--rebound .proto-card__icon svg { stroke: var(--color-balance); }
+
+.proto-card__title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-3);
+  line-height: 1.25;
+}
+.proto-card__desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: var(--space-5);
+}
+.proto-card__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.proto-card__step {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.proto-card__step::before {
+  content: '';
+  width: 16px; height: 1px;
+  background: var(--border-accent);
+  flex-shrink: 0;
+}
+.proto-card__duration {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.proto-card__dur-label { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-faint); letter-spacing: 0.08em; }
+.proto-card__dur-val { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* ══════════════════════════════════════════
+   SECTION 6: DASHBOARD PREVIEW (image)
+══════════════════════════════════════════ */
+.dash-preview {
+  padding: 0 0 clamp(var(--space-16), 8vw, var(--space-32));
+  background: var(--bg);
+}
+.dash-preview__inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+.dash-preview__frame {
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-accent);
+  overflow: hidden;
+  box-shadow: var(--shadow-accent-strong), var(--shadow-lg);
+  position: relative;
+}
+.dash-preview__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 60% 30% at 50% 0%, var(--accent-glow) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+.dash-preview__header {
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.dash-preview__dots { display: flex; gap: 6px; }
+.dash-preview__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.dash-preview__dot:nth-child(1) { background: var(--color-danger); }
+.dash-preview__dot:nth-child(2) { background: var(--color-warning); }
+.dash-preview__dot:nth-child(3) { background: var(--color-success); }
+.dash-preview__url {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  background: var(--bg-card);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.dash-preview__img { width: 100%; display: block; }
+
+/* ══════════════════════════════════════════
+   SECTION 7: CTA BANNER
+══════════════════════════════════════════ */
+.cta-banner {
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
+  background: var(--gradient-cta-bg);
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.cta-banner__glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(0,229,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-banner__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-default);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  text-align: center;
+}
+.cta-banner__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+.cta-banner__eyebrow::before,
+.cta-banner__eyebrow::after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 40px;
+  background: var(--border-accent);
+}
+.cta-banner__title {
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  margin-bottom: var(--space-4);
+}
+.cta-banner__sub {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: 44ch;
+  margin: 0 auto var(--space-8);
+  line-height: 1.7;
+}
+.cta-banner__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.cta-banner__compliance {
+  margin-top: var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+.compliance-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.compliance-item svg { opacity: 0.4; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .bcard--hrv     { grid-column: span 12; }
+  .bcard--ai      { grid-column: span 12; }
+  .bcard--edge    { grid-column: span 6; }
+  .bcard--bio     { grid-column: span 6; }
+  .bcard--platform { grid-column: span 12; }
+  .platform-mods { flex-direction: row; flex-wrap: wrap; gap: var(--space-2); }
+  .platform-mod { flex: 1 1 140px; }
+  .infra__stack { grid-template-columns: repeat(2, 1fr); }
+  .protocols__header { flex-direction: column; align-items: flex-start; }
+  .protocols__meta { text-align: left; }
+}
+@media (max-width: 768px) {
+  .hero__content { padding: var(--space-24) var(--space-4) var(--space-12); }
+  .hero__nav { padding: var(--space-4); }
+  .nav__pills { display: none; }
+  .metrics-bar__inner { grid-template-columns: repeat(2, 1fr); }
+  .metric-stat:nth-child(5) { grid-column: span 2; }
+  .bcard--edge    { grid-column: span 12; }
+  .bcard--bio     { grid-column: span 12; }
+  .proto-grid { grid-template-columns: 1fr; }
+  .infra__stack { grid-template-columns: 1fr; }
+  .infra__inner { grid-template-columns: 1fr; }
+  .infra__label { writing-mode: horizontal-tb; transform: none; }
+  .hero__float-stats { gap: var(--space-2); }
+  .float-stat { min-width: 90px; }
+}
+@media (max-width: 480px) {
+  .metrics-bar__inner { grid-template-columns: 1fr; }
+  .metric-stat:nth-child(5) { grid-column: span 1; }
+  .metric-stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .metric-stat:last-child { border-bottom: none; }
 }
 </style>
 </head>
 <body>
 
-<section class="physio-section" id="physiops">
-  <div class="container">
-    <div class="hero-layout">
-      <div class="hero-content">
-        <div class="hero-eyebrow">
-          <span class="pulse-dot"></span>
-          HumanOS &middot; PhysioPS Module &middot; Live
-        </div>
-        <h1 class="hero-title">
-          Autonomic Nervous<br>
-          System Testing<br>
-          <span class="accent-teal">at Edge Speed</span>
-        </h1>
-        <p class="hero-subtitle">
-          PhysioPS delivers real-time ANS biometric intelligence &mdash; mapping sympathetic, 
-          parasympathetic, and enteric balance with microsecond precision. 
-          Powered by the <strong style="color:#eef4fa">HumanOS AI Grid</strong> and deployed 
-          across <strong style="color:#eef4fa">Akamai Linode edge nodes</strong> worldwide.
-        </p>
-        <div class="status-strip">
-          <div class="status-chip"><span class="dot dot-green"></span> Edge Grid Active</div>
-          <div class="status-chip"><span class="dot dot-teal"></span> ANS Stream Online</div>
-          <div class="status-chip"><span class="dot dot-amber"></span> HRV Monitoring</div>
-          <div class="status-chip"><span class="dot dot-violet"></span> AI Inference: Ready</div>
-        </div>
-        <div class="hero-cta-group">
-          <a href="#" class="btn-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-            Run ANS Assessment
-          </a>
-          <a href="#protocols" class="btn-ghost">
-            View Protocols
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero" aria-label="PhysioPS HumanOS ANS Testing Platform Hero">
+
+  <!-- Navigation -->
+  <nav class="hero__nav" aria-label="Platform navigation">
+    <a href="#" class="nav__logo" aria-label="PhysioPS by Nirmata Holdings">
+      <!-- PhysioPS SVG Logo Mark -->
+      <svg class="nav__logo-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="8" fill="#0f1628"/>
+        <rect x="0.5" y="0.5" width="35" height="35" rx="7.5" stroke="rgba(0,229,255,0.25)"/>
+        <!-- Dual-branch ANS fork -->
+        <path d="M18 6 L18 14" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 14 L11 22" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 14 L25 22" stroke="#0077ff" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M11 22 L11 28" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M25 22 L25 28" stroke="#0077ff" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Node dots -->
+        <circle cx="18" cy="14" r="2" fill="#00e5ff" opacity="0.9"/>
+        <circle cx="11" cy="22" r="1.5" fill="#00e5ff" opacity="0.7"/>
+        <circle cx="25" cy="22" r="1.5" fill="#0077ff" opacity="0.7"/>
+        <circle cx="18" cy="6" r="2" fill="#00e5ff"/>
+      </svg>
+      <span class="nav__logo-text">Physio<span>PS</span></span>
+    </a>
+    <div class="nav__pills" role="list" aria-label="System status indicators">
+      <div class="nav__pill" role="listitem">
+        <span class="pill-dot" aria-hidden="true"></span>
+        Edge Grid Active
       </div>
-      <div class="hero-visual">
-        <div class="hero-img-wrap">
-          <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/515b1b5e-7a43-4a86-adf7-0c7309afd345.png"
-            alt="PhysioPS HumanOS ANS neural network on Akamai edge grid"
-            width="720" height="450" loading="eager">
-          <div class="hero-badge"><span class="dot dot-teal"></span> 24 Edge Nodes &middot; &lt;8ms Latency</div>
-          <div class="hero-badge-live">&#9679; LIVE</div>
-        </div>
+      <div class="nav__pill" role="listitem">
+        <span class="pill-dot" aria-hidden="true"></span>
+        ANS Stream Online
+      </div>
+      <div class="nav__pill" role="listitem">
+        <span class="pill-dot pill-dot--warn" aria-hidden="true"></span>
+        HRV Monitoring
+      </div>
+      <div class="nav__pill" role="listitem">
+        <span class="pill-dot pill-dot--green" aria-hidden="true"></span>
+        AI Inference: Ready
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Background -->
+  <div class="hero__bg" aria-hidden="true">
+    <img
+      src="https://user-gen-media-assets.s3.amazonaws.com/gemini_images/2c675ea4-732e-4c20-bb2b-e8585e91b0c1.png"
+      alt=""
+      width="1920" height="1080"
+      loading="eager"
+      decoding="async"
+    >
+  </div>
+  <div class="hero__scan" aria-hidden="true"></div>
+
+  <!-- Hero Content -->
+  <div class="hero__content">
+    <div class="hero__fda" aria-label="FDA 510(k) Cleared Medical Device">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      FDA 510(k) Cleared · Medical Device
+    </div>
+
+    <h1 class="hero__h1">
+      Map Your<br>
+      <span class="gradient-text">Autonomic</span><br>
+      Nervous System.
+    </h1>
+    <p class="hero__sub">
+      PhysioPS × HumanOS delivers real-time P&amp;S dual-branch ANS diagnostics — powered by NVIDIA Blackwell AI inference on Akamai edge compute. Clinical precision. Edge-native speed.
+    </p>
+
+    <div class="hero__actions">
+      <button class="btn btn--primary" type="button" aria-label="Run ANS Assessment">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Run ANS Assessment
+      </button>
+      <button class="btn btn--secondary" type="button">
+        View Clinical Protocols
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <span class="hero__live" aria-label="Live diagnostic session active">
+        <span class="live-dot" aria-hidden="true"></span>
+        Live
+      </span>
+    </div>
+
+    <!-- Floating stats -->
+    <div class="hero__float-stats" role="list" aria-label="Live ANS metrics">
+      <div class="float-stat" role="listitem">
+        <div class="float-stat__val">68.4 ms</div>
+        <div class="float-stat__label">HRV Baseline</div>
+      </div>
+      <div class="float-stat" role="listitem">
+        <div class="float-stat__val" style="color: var(--color-sympathetic);">0.84</div>
+        <div class="float-stat__label">ANS Coherence</div>
+      </div>
+      <div class="float-stat" role="listitem">
+        <div class="float-stat__val" style="color: var(--color-hrv);">62%</div>
+        <div class="float-stat__label">Sympathetic</div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="metrics-bar">
-  <div class="container">
-    <div class="metrics-row">
-      <div class="metric-item">
-        <div class="metric-value metric-teal">68.4<span style="font-size:var(--text-sm);color:var(--color-text-faint)"> ms</span></div>
-        <div class="metric-label">HRV Baseline</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value metric-green">0.84</div>
-        <div class="metric-label">ANS Coherence</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value metric-amber">62<span style="font-size:var(--text-sm);color:var(--color-text-faint)">%</span></div>
-        <div class="metric-label">Sympathetic</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value metric-violet">7.2<span style="font-size:var(--text-sm);color:var(--color-text-faint)"> ms</span></div>
-        <div class="metric-label">Edge Latency</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value metric-white">99.97<span style="font-size:var(--text-sm);color:var(--color-text-faint)">%</span></div>
-        <div class="metric-label">Uptime SLA</div>
-      </div>
+<!-- ══════════════════════════════════════
+     ANS METRICS BAR
+══════════════════════════════════════ -->
+<section class="metrics-bar" aria-label="Real-time ANS platform metrics">
+  <div class="metrics-bar__scan" aria-hidden="true"></div>
+  <div class="metrics-bar__inner">
+    <div class="metric-stat">
+      <div class="metric-stat__label">HRV Baseline</div>
+      <div class="metric-stat__val">68.4 ms</div>
+      <div class="metric-stat__sub">±2.1 ms · Parasympathetic</div>
+    </div>
+    <div class="metric-stat">
+      <div class="metric-stat__label">ANS Coherence</div>
+      <div class="metric-stat__val">0.84</div>
+      <div class="metric-stat__sub">0.0 – 1.0 scale</div>
+    </div>
+    <div class="metric-stat metric-stat--symp">
+      <div class="metric-stat__label">Sympathetic %</div>
+      <div class="metric-stat__val">62%</div>
+      <div class="metric-stat__sub">LFa channel · LFa/RFa ratio</div>
+    </div>
+    <div class="metric-stat metric-stat--latency">
+      <div class="metric-stat__label">Edge Latency</div>
+      <div class="metric-stat__val">7.2 ms</div>
+      <div class="metric-stat__sub">Akamai · Nearest PoP</div>
+    </div>
+    <div class="metric-stat metric-stat--sla">
+      <div class="metric-stat__label">Uptime SLA</div>
+      <div class="metric-stat__val">99.97%</div>
+      <div class="metric-stat__sub">30d rolling · HIPAA</div>
     </div>
   </div>
-</div>
+</section>
 
-<section class="features-section">
-  <div class="container">
-    <div class="section-header fade-in">
-      <div>
-        <div class="section-kicker">Core Capabilities</div>
-        <h2 class="section-title">The Complete ANS<br>Intelligence Stack</h2>
-      </div>
-      <p class="section-desc">From raw biometric input to AI-interpreted ANS state mapping &mdash; all processing distributed across the Akamai edge AI grid.</p>
-    </div>
-    <div class="bento-grid">
+<!-- ══════════════════════════════════════
+     BENTO FEATURES
+══════════════════════════════════════ -->
+<section class="features" aria-label="Platform features">
+  <div class="features__header fade-in">
+    <div class="section-tag">Platform Capabilities</div>
+    <h2 class="features__title">Dual-Branch ANS Intelligence at the Edge</h2>
+    <p class="features__desc">
+      PhysioPS monitors both Parasympathetic (RFa) and Sympathetic (LFa) branches simultaneously — the Colombo et al. methodology, delivered in real time via HumanOS AI inference on Akamai's global edge grid.
+    </p>
+  </div>
 
-      <!-- HRV Live Monitor — span 7 -->
-      <div class="bento-card hrv-card span-7 fade-in">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);align-items:start">
-          <div>
-            <div class="card-icon icon-teal">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </div>
-            <div style="display:flex;align-items:baseline;gap:var(--space-2);margin-bottom:var(--space-2)">
-              <span class="hrv-score">68.4</span><span class="hrv-unit">ms RMSSD</span>
-            </div>
-            <div class="card-title" style="margin-bottom:var(--space-2)">Real-Time HRV Monitor</div>
-            <p class="card-body">Continuous heart rate variability capture with sub-millisecond precision. Beat-to-beat interval analysis streams directly to the HumanOS edge inference engine.</p>
-            <div class="balance-row" style="margin-top:var(--space-5)">
-              <span class="balance-label" style="color:var(--color-amber)">SYM</span>
-              <div class="balance-track"><div class="balance-fill fill-symp" style="width:62%"></div></div>
-              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-amber);width:30px">62%</span>
-            </div>
-            <div class="balance-row">
-              <span class="balance-label" style="color:var(--color-primary)">PNS</span>
-              <div class="balance-track"><div class="balance-fill fill-para" style="width:38%"></div></div>
-              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-primary);width:30px">38%</span>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3)">
-              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint)">LIVE SIGNAL</span>
-              <span class="hrv-status"><span class="dot dot-green"></span> Normal</span>
-            </div>
-            <svg class="waveform-svg" viewBox="0 0 300 60" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#1dd6e0" stop-opacity="0.25"/>
-                  <stop offset="100%" stop-color="#1dd6e0" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path class="waveform-fill" d="M0 40 Q15 40 20 40 L25 20 L30 55 L35 5 L40 50 L45 40 Q55 40 60 40 L65 22 L70 53 L75 8 L80 48 L85 40 Q100 40 105 40 L110 24 L115 52 L120 10 L125 46 L130 40 Q145 40 150 40 L155 19 L160 56 L165 6 L170 49 L175 40 Q190 40 195 40 L200 21 L205 54 L210 7 L215 50 L220 40 Q235 40 240 40 L245 23 L250 51 L255 11 L260 47 L265 40 Q280 40 285 40 L290 22 L295 53 L300 40 L300 60 L0 60 Z"/>
-              <path class="waveform-line" d="M0 40 Q15 40 20 40 L25 20 L30 55 L35 5 L40 50 L45 40 Q55 40 60 40 L65 22 L70 53 L75 8 L80 48 L85 40 Q100 40 105 40 L110 24 L115 52 L120 10 L125 46 L130 40 Q145 40 150 40 L155 19 L160 56 L165 6 L170 49 L175 40 Q190 40 195 40 L200 21 L205 54 L210 7 L215 50 L220 40 Q235 40 240 40 L245 23 L250 51 L255 11 L260 47 L265 40 Q280 40 285 40 L290 22 L295 53 L300 40"/>
-            </svg>
-            <div style="display:flex;justify-content:space-between;margin-top:var(--space-2)">
-              <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-faint)">-30s</span>
-              <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-faint)">NOW</span>
-            </div>
-          </div>
-        </div>
+  <div class="bento" role="list">
+
+    <!-- HRV Monitor Card -->
+    <article class="bcard bcard--hrv reveal-up" role="listitem" aria-label="Real-Time HRV Monitor">
+      <div class="bcard__tag">HumanOS Core</div>
+      <h3 class="bcard__title">Real-Time HRV Monitor</h3>
+      <p class="bcard__desc">Continuous spectral analysis of heart rate variability — RFa (parasympathetic) and LFa (sympathetic) power bands isolated and visualized in real time.</p>
+
+      <!-- Waveform SVG -->
+      <div class="hrv-chart" aria-hidden="true">
+        <svg viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="hrv-grad-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="0" y1="40" x2="600" y2="40" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="20" x2="600" y2="20" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="60" x2="600" y2="60" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <!-- HRV waveform path -->
+          <path class="hrv-path" d="M0,40 L30,40 L35,15 L45,65 L55,20 L65,55 L80,40 L110,40 L115,12 L125,68 L135,18 L145,58 L160,40 L190,40 L195,10 L205,70 L215,15 L225,62 L240,40 L270,40 L275,14 L285,66 L295,20 L305,56 L320,40 L350,40 L355,11 L365,69 L375,17 L385,60 L400,40 L430,40 L435,13 L445,67 L455,19 L465,57 L480,40 L510,40 L515,10 L525,70 L535,16 L545,61 L560,40 L600,40"
+                stroke="#00e5ff" stroke-width="1.5" fill="none"/>
+          <!-- Sympathetic overlay -->
+          <path d="M0,42 C60,38 120,46 180,40 C240,34 300,48 360,42 C420,36 480,44 600,40"
+                stroke="#0077ff" stroke-width="1" fill="none" opacity="0.4" stroke-dasharray="4 3"/>
+        </svg>
       </div>
 
-      <!-- AI Inference — span 5 -->
-      <div class="bento-card span-5 fade-in">
-        <div class="card-icon icon-violet">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      <!-- P&S Balance -->
+      <div class="hrv-balance">
+        <div class="hrv-channel hrv-channel--para">
+          <div class="hrv-channel__label">Parasympathetic / RFa</div>
+          <div class="hrv-channel__bar-track"><div class="hrv-channel__bar-fill"></div></div>
+          <div class="hrv-channel__val">38% · 0.04–0.15 Hz</div>
         </div>
-        <div class="card-title">AI Inference Engine</div>
-        <p class="card-body" style="margin-bottom:var(--space-4)">HumanOS multimodal model interprets ANS telemetry in real-time &mdash; identifying dysregulation patterns, stress signatures, and recovery windows with clinical-grade accuracy.</p>
-        <div class="ai-metrics-grid">
-          <div class="ai-metric-box"><div class="ai-metric-num metric-violet">97.3<span style="font-size:var(--text-xs)">%</span></div><div class="ai-metric-desc">Accuracy</div></div>
-          <div class="ai-metric-box"><div class="ai-metric-num metric-teal">&lt;12<span style="font-size:var(--text-xs)">ms</span></div><div class="ai-metric-desc">Inference</div></div>
-          <div class="ai-metric-box"><div class="ai-metric-num metric-amber">6</div><div class="ai-metric-desc">ANS States</div></div>
-          <div class="ai-metric-box"><div class="ai-metric-num metric-green">24/7</div><div class="ai-metric-desc">Edge Processing</div></div>
+        <div class="hrv-channel hrv-channel--symp">
+          <div class="hrv-channel__label">Sympathetic / LFa</div>
+          <div class="hrv-channel__bar-track"><div class="hrv-channel__bar-fill"></div></div>
+          <div class="hrv-channel__val">62% · 0.15–0.40 Hz</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- AI Inference Card -->
+    <article class="bcard bcard--ai reveal-up" role="listitem" style="animation-delay:0.05s" aria-label="AI Inference Engine">
+      <div class="bcard__tag">AntimatterAI · ATOM Agent</div>
+      <h3 class="bcard__title">AI Inference Engine</h3>
+      <p class="bcard__desc">NVIDIA Blackwell-powered ATOM agentic AI classifies ANS state, flags clinical deviations, and surfaces diagnostic insights in under 8ms.</p>
+      <div class="ai-metrics">
+        <div class="ai-metric">
+          <div class="ai-metric__val">98.7%</div>
+          <div class="ai-metric__label">Classification Accuracy</div>
+        </div>
+        <div class="ai-metric ai-metric--blue">
+          <div class="ai-metric__val">7.8 ms</div>
+          <div class="ai-metric__label">Inference Latency</div>
+        </div>
+        <div class="ai-metric ai-metric--violet">
+          <div class="ai-metric__val">12</div>
+          <div class="ai-metric__label">ANS State Classes</div>
+        </div>
+        <div class="ai-metric ai-metric--green">
+          <div class="ai-metric__val">Live</div>
+          <div class="ai-metric__label">Streaming Mode</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Akamai Edge Network Card -->
+    <article class="bcard bcard--edge reveal-up" role="listitem" style="animation-delay:0.10s" aria-label="Akamai Edge Network">
+      <div class="bcard__tag">Akamai Linode · AI Grid</div>
+      <h3 class="bcard__title">Edge Compute Network</h3>
+      <p class="bcard__desc">Akamai Linode distributes AI inference to 40+ global edge nodes — sub-10ms response from any clinical site on Earth.</p>
+
+      <!-- Edge map -->
+      <div class="edge-map" aria-hidden="true">
+        <svg class="edge-svg" viewBox="0 0 400 90" aria-hidden="true">
+          <!-- World map silhouette (simplified) -->
+          <path d="M20,55 Q40,30 70,45 Q90,55 110,40 Q140,25 160,50 Q180,65 200,45 Q220,30 250,50 Q270,60 300,45 Q330,30 360,50 Q380,58 395,45"
+                stroke="rgba(0,229,255,0.12)" stroke-width="1" fill="none"/>
+          <!-- Node connections -->
+          <line x1="80" y1="42" x2="200" y2="44" stroke="rgba(0,119,255,0.20)" stroke-width="1" stroke-dasharray="3 2"/>
+          <line x1="200" y1="44" x2="340" y2="47" stroke="rgba(0,229,255,0.20)" stroke-width="1" stroke-dasharray="3 2"/>
+          <line x1="80" y1="42" x2="340" y2="47" stroke="rgba(0,229,255,0.08)" stroke-width="1" stroke-dasharray="3 2"/>
+          <!-- Nodes -->
+          <circle cx="80" cy="42" r="4" fill="#00e5ff" opacity="0.9"/>
+          <circle cx="80" cy="42" r="8" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.4">
+            <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="200" cy="44" r="4" fill="#0077ff" opacity="0.9"/>
+          <circle cx="200" cy="44" r="8" fill="none" stroke="#0077ff" stroke-width="1" opacity="0.4">
+            <animate attributeName="r" values="4;12;4" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="340" cy="47" r="4" fill="#00e5ff" opacity="0.9"/>
+          <circle cx="340" cy="47" r="8" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.4">
+            <animate attributeName="r" values="4;12;4" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0;0.7" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Labels -->
+          <text x="72" y="60" fill="#4a5568" font-size="7" font-family="JetBrains Mono, monospace" text-anchor="middle">Newark</text>
+          <text x="200" y="60" fill="#4a5568" font-size="7" font-family="JetBrains Mono, monospace" text-anchor="middle">Frankfurt</text>
+          <text x="340" y="60" fill="#4a5568" font-size="7" font-family="JetBrains Mono, monospace" text-anchor="middle">Singapore</text>
+        </svg>
+      </div>
+
+      <div class="edge-nodes" aria-label="Edge node latencies">
+        <div class="edge-node"><span class="edge-node__city">Newark</span><span class="edge-node__ms">5.1ms</span></div>
+        <div class="edge-node"><span class="edge-node__city">Frankfurt</span><span class="edge-node__ms">6.8ms</span></div>
+        <div class="edge-node"><span class="edge-node__city">Singapore</span><span class="edge-node__ms">9.3ms</span></div>
+      </div>
+    </article>
+
+    <!-- Biometric Telemetry -->
+    <article class="bcard bcard--bio reveal-up" role="listitem" style="animation-delay:0.15s" aria-label="Biometric Telemetry">
+      <div class="bcard__tag">PhysioPS Hardware</div>
+      <h3 class="bcard__title">Biometric Telemetry</h3>
+      <p class="bcard__desc">Multi-modal sensor fusion — 5-channel concurrent capture with zero-interpolation streaming to the HumanOS edge pipeline.</p>
+      <div class="bio-pills" role="list">
+        <div class="bio-pill" role="listitem">PPG</div>
+        <div class="bio-pill" role="listitem">ECG</div>
+        <div class="bio-pill" role="listitem">GSR</div>
+        <div class="bio-pill" role="listitem">RESP</div>
+        <div class="bio-pill" role="listitem">TEMP</div>
+      </div>
+    </article>
+
+    <!-- HumanOS Platform -->
+    <article class="bcard bcard--platform reveal-up" role="listitem" style="animation-delay:0.20s" aria-label="HumanOS Platform Modules">
+      <div class="bcard__tag">Nirmata Ecosystem</div>
+      <h3 class="bcard__title">HumanOS</h3>
+      <p class="bcard__desc" style="max-width: 32ch;">The AI intelligence layer — modules for every clinical use case.</p>
+      <div class="platform-mods" role="list">
+        <div class="platform-mod" role="listitem">
+          <span class="platform-mod__name platform-mod__name--physio">PhysioPS</span>
+          <span class="platform-mod__status">Active</span>
+        </div>
+        <div class="platform-mod" role="listitem">
+          <span class="platform-mod__name platform-mod__name--neuro">NeuroSync</span>
+          <span class="platform-mod__status">Active</span>
+        </div>
+        <div class="platform-mod" role="listitem">
+          <span class="platform-mod__name platform-mod__name--recov">RecoveryAI</span>
+          <span class="platform-mod__status">Active</span>
+        </div>
+        <div class="platform-mod" role="listitem">
+          <span class="platform-mod__name platform-mod__name--atom">ATOM Agent</span>
+          <span class="platform-mod__status">Active</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     INFRASTRUCTURE STRIP
+══════════════════════════════════════ -->
+<section class="infra" aria-label="Infrastructure stack">
+  <div class="infra__inner">
+    <div class="infra__label" aria-hidden="true">Infrastructure</div>
+    <div class="infra__stack">
+
+      <div class="infra-block fade-in">
+        <div class="infra-block__logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="infra-block__logo-text">Akamai Linode</span>
+        </div>
+        <div class="infra-block__title">Edge Compute Grid</div>
+        <div class="infra-block__desc">40+ global PoPs. Sub-10ms AI inference. HIPAA-eligible infrastructure with post-quantum cryptographic key management.</div>
+        <div class="infra-block__badges">
+          <span class="infra-badge infra-badge--accent">Edge Compute</span>
+          <span class="infra-badge">Object Storage</span>
+          <span class="infra-badge">VPC</span>
+          <span class="infra-badge infra-badge--accent">Linode GPU</span>
         </div>
       </div>
 
-      <!-- Edge Network — span 4 -->
-      <div class="bento-card span-4 fade-in">
-        <div class="card-icon icon-teal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <div class="infra-block fade-in" style="animation-delay:0.1s">
+        <div class="infra-block__logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg>
+          <span class="infra-block__logo-text">NVIDIA Blackwell</span>
         </div>
-        <div class="card-title">Akamai Edge Network</div>
-        <p class="card-body" style="margin-bottom:var(--space-4)">PhysioPS deploys across 24 Akamai Linode edge regions, ensuring biometric data is processed at the nearest node &mdash; sub-10ms round-trip globally.</p>
-        <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/f5afbb51-fbd4-4d92-8cc3-70e6cbece687.png"
-          alt="Akamai Linode edge AI grid distributed node network"
-          class="edge-card-img" width="400" height="140" loading="lazy">
-        <ul class="node-list">
-          <li class="node-item"><span class="node-region">US-East / Newark</span><span class="node-latency">4.2ms</span><span class="node-status-badge">ACTIVE</span></li>
-          <li class="node-item"><span class="node-region">EU-West / Frankfurt</span><span class="node-latency">6.8ms</span><span class="node-status-badge">ACTIVE</span></li>
-          <li class="node-item"><span class="node-region">APAC / Singapore</span><span class="node-latency">9.1ms</span><span class="node-status-badge">ACTIVE</span></li>
-        </ul>
-      </div>
-
-      <!-- Biometric Telemetry — featured span 5 -->
-      <div class="bento-card card-featured span-5 fade-in">
-        <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/f19e72ab-2cfd-4f06-9daa-a9a6d783e596.png"
-          alt="ANS HRV biometric telemetry dashboard" class="card-img" width="500" height="200" loading="lazy">
-        <div class="card-content">
-          <div class="card-title">Biometric Telemetry</div>
-          <p class="card-body">Multi-channel sensor fusion &mdash; PPG, ECG, GSR, temperature, and respiratory rate &mdash; processed through HumanOS into unified ANS state scores.</p>
-          <div class="protocol-pills">
-            <span class="pill pill-teal">PPG</span><span class="pill pill-teal">ECG</span>
-            <span class="pill pill-amber">GSR</span><span class="pill pill-amber">RESP</span>
-            <span class="pill pill-violet">TEMP</span><span class="pill pill-muted">+4 more</span>
-          </div>
+        <div class="infra-block__title">AI Inference Grid</div>
+        <div class="infra-block__desc">NVIDIA Blackwell GPU clusters running ATOM agentic inference. Parallel ANS state classification across patient sessions with real-time streaming output.</div>
+        <div class="infra-block__badges">
+          <span class="infra-badge infra-badge--accent">Blackwell B200</span>
+          <span class="infra-badge">NVLink</span>
+          <span class="infra-badge infra-badge--accent">CUDA 13</span>
         </div>
       </div>
 
-      <!-- HumanOS Platform — span 3 -->
-      <div class="bento-card span-3 fade-in">
-        <div class="card-icon icon-amber">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+      <div class="infra-block fade-in" style="animation-delay:0.2s">
+        <div class="infra-block__logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="infra-block__logo-text">Compliance</span>
         </div>
-        <div class="card-title">HumanOS Platform</div>
-        <p class="card-body">Unified OS for human physiology &mdash; integrating ANS data with cognitive load, recovery state, and performance readiness into one coherent model.</p>
-        <div class="protocol-pills">
-          <span class="pill pill-amber">PhysioPS</span>
-          <span class="pill pill-teal">NeuroSync</span>
-          <span class="pill pill-violet">RecoveryAI</span>
+        <div class="infra-block__title">HIPAA · SOC 2 · FDA</div>
+        <div class="infra-block__desc">Post-quantum cryptography (CRYSTALS-Kyber/Dilithium). FDA 510(k) cleared. End-to-end patient data encryption with zero-knowledge audit trails.</div>
+        <div class="infra-block__badges">
+          <span class="infra-badge infra-badge--accent">HIPAA</span>
+          <span class="infra-badge infra-badge--accent">SOC 2 Type II</span>
+          <span class="infra-badge">FDA 510(k)</span>
+          <span class="infra-badge">PQC</span>
         </div>
       </div>
 
@@ -442,111 +1661,170 @@ button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
   </div>
 </section>
 
-<div class="infra-strip">
-  <div class="container">
-    <div class="infra-layout">
-      <div>
-        <div class="infra-kicker">Powered By</div>
-        <h3 class="infra-title">Akamai Linode<br>AI Grid Architecture</h3>
-        <p class="infra-desc">PhysioPS is built on a distributed edge computing fabric &mdash; Akamai Linode's globally distributed infrastructure ensures biometric AI processing happens at the edge, not in a distant datacenter. Zero cold starts. Deterministic sub-10ms latency. Compliant data residency.</p>
+<!-- ══════════════════════════════════════
+     DASHBOARD PREVIEW
+══════════════════════════════════════ -->
+<section class="dash-preview" aria-label="HumanOS diagnostic dashboard preview">
+  <div class="dash-preview__inner fade-in">
+    <div class="dash-preview__frame">
+      <div class="dash-preview__header" aria-hidden="true">
+        <div class="dash-preview__dots">
+          <div class="dash-preview__dot"></div>
+          <div class="dash-preview__dot"></div>
+          <div class="dash-preview__dot"></div>
+        </div>
+        <div class="dash-preview__url">humanos.physiops.ai/diagnostic/ans-session</div>
       </div>
-      <div class="infra-right fade-in">
-        <div class="infra-box">
-          <span class="infra-box-icon">&#9889;</span>
-          <div class="infra-box-name">Edge Compute</div>
-          <div class="infra-box-detail">Akamai Linode<br>24 Global Regions</div>
-        </div>
-        <div class="infra-box">
-          <span class="infra-box-icon">&#129504;</span>
-          <div class="infra-box-name">AI Grid</div>
-          <div class="infra-box-detail">HumanOS Model<br>Multimodal Inference</div>
-        </div>
-        <div class="infra-box">
-          <span class="infra-box-icon">&#128274;</span>
-          <div class="infra-box-name">Compliance</div>
-          <div class="infra-box-detail">HIPAA Ready<br>Data Residency</div>
-        </div>
-      </div>
+      <img
+        class="dash-preview__img"
+        src="https://user-gen-media-assets.s3.amazonaws.com/gemini_images/e7927189-58c3-4c42-9a57-a0801ce93623.png"
+        alt="HumanOS ANS diagnostic dashboard showing HRV frequency domain analysis, P&S balance gauge, and ECG waveform"
+        width="1200" height="675"
+        loading="lazy"
+        decoding="async"
+      >
     </div>
   </div>
-</div>
+</section>
 
-<section class="protocols-section" id="protocols">
-  <div class="container">
-    <div class="section-header fade-in" style="grid-template-columns:1fr;margin-bottom:var(--space-10)">
-      <div>
-        <div class="section-kicker">Test Protocols</div>
-        <h2 class="section-title">Clinical ANS Assessment Suite</h2>
-      </div>
+<!-- ══════════════════════════════════════
+     CLINICAL PROTOCOLS
+══════════════════════════════════════ -->
+<section class="protocols" aria-label="Clinical assessment protocols">
+  <div class="protocols__header">
+    <div>
+      <div class="section-tag">Assessment Protocols</div>
+      <h2 class="protocols__title">
+        Three Protocols.<br>
+        <span class="gradient-text">Complete ANS Profile.</span>
+      </h2>
     </div>
-    <div class="protocols-grid">
-      <div class="protocol-card proto-teal fade-in">
-        <div class="proto-num">01 &mdash; Autonomic Tone</div>
-        <div class="proto-title">Resting ANS<br>Baseline Protocol</div>
-        <p class="proto-desc">5-minute supine resting capture establishing sympathovagal balance baseline. HRV spectral analysis (LF/HF ratio), baroreflex sensitivity, and cardiac vagal tone index computed at edge.</p>
-        <div class="proto-tags"><span class="pill pill-teal">HRV Spectral</span><span class="pill pill-teal">BRS</span><span class="pill pill-muted">5 min</span></div>
+    <div class="protocols__meta" aria-label="Protocol metadata">
+      <span class="mono" style="color: var(--text-faint)">Protocol Version</span><br>
+      <span class="mono" style="color: var(--accent)">PhysioPS-CLI v4.2.1</span><br>
+      <span class="mono" style="color: var(--text-faint)">Colombo et al. Validated</span>
+    </div>
+  </div>
+
+  <div class="proto-grid">
+
+    <!-- Protocol 01 -->
+    <article class="proto-card proto-card--baseline fade-in" aria-label="Protocol 01: Resting ANS Baseline">
+      <div class="proto-card__top-bar" aria-hidden="true"></div>
+      <div class="proto-card__num">01</div>
+      <div class="proto-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
       </div>
-      <div class="protocol-card proto-amber fade-in">
-        <div class="proto-num">02 &mdash; Stress Response</div>
-        <div class="proto-title">Sympathetic<br>Activation Test</div>
-        <p class="proto-desc">Cold pressor and cognitive load challenges measure sympathetic reactivity, cortisol proxy, and catecholamine response curves. AI model scores dysregulation severity in real-time.</p>
-        <div class="proto-tags"><span class="pill pill-amber">Cold Pressor</span><span class="pill pill-amber">GSR Reactivity</span><span class="pill pill-muted">12 min</span></div>
+      <h3 class="proto-card__title">Resting ANS Baseline</h3>
+      <p class="proto-card__desc">Establishes the patient's supine resting autonomic state. Captures RFa (parasympathetic) and LFa (sympathetic) power spectral density at full resolution.</p>
+      <ul class="proto-card__steps" aria-label="Protocol steps">
+        <li class="proto-card__step">5-min supine rest period</li>
+        <li class="proto-card__step">Continuous ECG + PPG capture</li>
+        <li class="proto-card__step">Spectral HRV analysis · RFa/LFa isolation</li>
+        <li class="proto-card__step">AI baseline profile generation</li>
+      </ul>
+      <div class="proto-card__duration">
+        <span class="proto-card__dur-label">Duration</span>
+        <span class="proto-card__dur-val">8 min</span>
       </div>
-      <div class="protocol-card proto-violet fade-in">
-        <div class="proto-num">03 &mdash; Recovery Mapping</div>
-        <div class="proto-title">Parasympathetic<br>Rebound Analysis</div>
-        <p class="proto-desc">Post-stress HRV recovery kinetics, vagal reactivation slope, and RMSSD restoration trajectory charted against population norms. Outputs actionable recovery readiness score.</p>
-        <div class="proto-tags"><span class="pill pill-violet">RMSSD Recovery</span><span class="pill pill-violet">Vagal Index</span><span class="pill pill-muted">20 min</span></div>
+    </article>
+
+    <!-- Protocol 02 -->
+    <article class="proto-card proto-card--activation fade-in" style="animation-delay:0.08s" aria-label="Protocol 02: Sympathetic Activation Test">
+      <div class="proto-card__top-bar" aria-hidden="true"></div>
+      <div class="proto-card__num">02</div>
+      <div class="proto-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <h3 class="proto-card__title">Sympathetic Activation Test</h3>
+      <p class="proto-card__desc">Controlled sympathetic challenge via orthostatic stress or cognitive load. Measures LFa response amplitude and recovery kinetics in real time.</p>
+      <ul class="proto-card__steps" aria-label="Protocol steps">
+        <li class="proto-card__step">Orthostatic or cognitive stressor</li>
+        <li class="proto-card__step">LFa peak capture + rise time</li>
+        <li class="proto-card__step">Sympathetic withdrawal detection</li>
+        <li class="proto-card__step">ATOM AI state classification</li>
+      </ul>
+      <div class="proto-card__duration">
+        <span class="proto-card__dur-label">Duration</span>
+        <span class="proto-card__dur-val">12 min</span>
+      </div>
+    </article>
+
+    <!-- Protocol 03 -->
+    <article class="proto-card proto-card--rebound fade-in" style="animation-delay:0.16s" aria-label="Protocol 03: Parasympathetic Rebound Analysis">
+      <div class="proto-card__top-bar" aria-hidden="true"></div>
+      <div class="proto-card__num">03</div>
+      <div class="proto-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2.5 2v6h6M21.5 22v-6h-6"/>
+          <path d="M22 11.5A10 10 0 0 0 3.2 7.2M2 12.5a10 10 0 0 0 18.8 4.2"/>
+        </svg>
+      </div>
+      <h3 class="proto-card__title">Parasympathetic Rebound Analysis</h3>
+      <p class="proto-card__desc">Post-stressor recovery phase analysis. Quantifies the speed and completeness of RFa reactivation — a primary marker of ANS resilience and vagal tone.</p>
+      <ul class="proto-card__steps" aria-label="Protocol steps">
+        <li class="proto-card__step">Post-stressor recovery period</li>
+        <li class="proto-card__step">RFa rebound rate measurement</li>
+        <li class="proto-card__step">Vagal tone index computation</li>
+        <li class="proto-card__step">Resilience score · ClinixAI report</li>
+      </ul>
+      <div class="proto-card__duration">
+        <span class="proto-card__dur-label">Duration</span>
+        <span class="proto-card__dur-val">10 min</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CTA BANNER
+══════════════════════════════════════ -->
+<section class="cta-banner" aria-label="Call to action">
+  <div class="cta-banner__glow" aria-hidden="true"></div>
+  <div class="cta-banner__inner">
+    <div class="cta-banner__eyebrow">PhysioPS × HumanOS</div>
+    <h2 class="cta-banner__title">
+      <span class="gradient-text">Map Your ANS.</span><br>
+      Understand Your Biology.
+    </h2>
+    <p class="cta-banner__sub">
+      The world's most advanced autonomic nervous system diagnostic platform. FDA 510(k) cleared. Powered by AntimatterAI ATOM agents on Akamai edge compute.
+    </p>
+    <div class="cta-banner__actions">
+      <button class="btn btn--primary" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Begin Assessment
+      </button>
+      <button class="btn btn--ghost" type="button">
+        Schedule Demo
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="cta-banner__compliance" aria-label="Compliance certifications">
+      <div class="compliance-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        HIPAA Compliant
+      </div>
+      <div class="compliance-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        FDA 510(k) Cleared
+      </div>
+      <div class="compliance-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        SOC 2 Type II
+      </div>
+      <div class="compliance-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Post-Quantum PQC
       </div>
     </div>
   </div>
 </section>
 
-<section style="padding-block:var(--space-8) var(--space-20)">
-  <div class="container">
-    <div class="cta-banner fade-in">
-      <div class="cta-inner">
-        <div>
-          <div class="cta-label">Get Started with PhysioPS</div>
-          <div class="cta-title">Map Your ANS.<br>Understand Your Biology.</div>
-          <p class="cta-sub">Begin your first HumanOS ANS assessment &mdash; streaming live to the Akamai edge AI grid, results in under 60 seconds.</p>
-        </div>
-        <div class="cta-actions">
-          <a href="#" class="btn-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-            Start Free Assessment
-          </a>
-          <a href="#" class="btn-ghost" style="text-align:center;justify-content:center">View API Docs</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-document.querySelectorAll('.bento-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100).toFixed(1)+'%');
-    card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100).toFixed(1)+'%');
-  });
-});
-const balObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){
-      e.target.querySelectorAll('.balance-fill').forEach(bar => {
-        const w = bar.style.width; bar.style.width='0%';
-        requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width=w));
-      });
-      balObs.unobserve(e.target);
-    }
-  });
-},{threshold:.3});
-document.querySelectorAll('.hrv-card').forEach(c=>balObs.observe(c));
-document.querySelectorAll('.infra-box').forEach(b=>{
-  b.addEventListener('mouseenter',()=>b.style.setProperty('--color-border','rgba(80,200,220,.22)'));
-  b.addEventListener('mouseleave',()=>b.style.setProperty('--color-border','rgba(80,200,220,.10)'));
-});
-</script>
 </body>
 </html>
